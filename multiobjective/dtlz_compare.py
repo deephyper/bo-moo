@@ -56,7 +56,15 @@ if __name__ == "__main__":
     from deephyper_benchmark.lib.dtlz import hpo
 
     # define the evaluator to distribute the computation
-    evaluator = Evaluator.create(
+    evaluator1 = Evaluator.create(
+        hpo.run,
+        method="process",
+        method_kwargs={
+            "num_workers": 4,
+        },
+    )
+    # define the evaluator to distribute the computation
+    evaluator2 = Evaluator.create(
         hpo.run,
         method="process",
         method_kwargs={
@@ -65,49 +73,47 @@ if __name__ == "__main__":
     )
 
     # define the search method(s) and scalarization
-    search1 = CBO(hpo.problem, evaluator,
-                  moo_scalarization_strategy="Chebyshev",
-                  moo_rescale_weight=True,
-                  moo_scalarization_weight="uniform sample")
-    search2 = CBO(hpo.problem, evaluator,
-                  moo_scalarization_strategy="Chebyshev",
-                  moo_rescale_weight=False,
-                  moo_scalarization_weight="uniform sample")
+    search1 = CBO(hpo.problem, evaluator1,
+                  moo_scalarization_strategy="rChebyshev")
+    search2 = CBO(hpo.problem, evaluator2,
+                  moo_scalarization_strategy="Chebyshev")
 
     # solve with BB_BUDGET evals
-    results_scaled = search1.search(max_evals=BB_BUDGET)
-    results_unscaled = search2.search(max_evals=BB_BUDGET)
+    res_adapt = search1.search(max_evals=BB_BUDGET)
+    res_unadapt = search2.search(max_evals=BB_BUDGET)
 
     # gather performance stats
     from ast import literal_eval
     from deephyper_benchmark.lib.dtlz.metrics import PerformanceEvaluator
 
     # Extract objective values from dataframe
-    obj_pts_scaled = np.asarray([literal_eval(fi) for
-                                 fi in results_scaled["objective"].values])
-    obj_pts_unscaled = np.asarray([literal_eval(fi) for
-                                   fi in results_unscaled["objective"].values])
+    obj_pts_adapt = np.asarray([literal_eval(fi) for fi in
+                                res_adapt.sort_values("job_id")["objective"].values])
+    obj_pts_unadapt = np.asarray([literal_eval(fi) for fi in
+                                  res_unadapt.sort_values("job_id")["objective"].values])
     # Initialize performance arrays
-    hv_vals_scaled = []
-    hv_vals_unscaled = []
+    hv_vals_adapt = []
+    hv_vals_unadapt = []
     bbf_num = []
     # Create a performance evaluator for this problem and loop over budgets
     perf_eval = PerformanceEvaluator()
     for i in range(10, BB_BUDGET, 10):
-        hv_vals_scaled.append(perf_eval.hypervolume(obj_pts_scaled[:i, :]))
-        hv_vals_unscaled.append(perf_eval.hypervolume(obj_pts_unscaled[:i, :]))
+        hv_vals_adapt.append(perf_eval.hypervolume(obj_pts_adapt[:i, :]))
+        hv_vals_unadapt.append(perf_eval.hypervolume(obj_pts_unadapt[:i, :]))
         bbf_num.append(i)
     # Don't forget final budget
-    hv_vals_scaled.append(perf_eval.hypervolume(obj_pts_scaled))
-    hv_vals_unscaled.append(perf_eval.hypervolume(obj_pts_unscaled))
+    hv_vals_adapt.append(perf_eval.hypervolume(obj_pts_adapt))
+    hv_vals_unadapt.append(perf_eval.hypervolume(obj_pts_unadapt))
     bbf_num.append(BB_BUDGET)
 
     # plot performance over time
     from matplotlib import pyplot as plt
-    plt.scatter(bbf_num, hv_vals_scaled, c='r', s=50, label="Hypervolumes for scaled solver")
-    plt.scatter(bbf_num, hv_vals_unscaled, c='b', s=50, label="Hypervolumes for unscaled solver")
-    plt.plot(bbf_num, hv_vals_scaled, 'r--')
-    plt.plot(bbf_num, hv_vals_unscaled, 'b--')
+    plt.scatter(bbf_num, hv_vals_adapt, c='r', s=50,
+                label="Hypervolumes for adaptive solver")
+    plt.scatter(bbf_num, hv_vals_unadapt, c='b', s=50,
+                label="Hypervolumes for unadaptive solver")
+    plt.plot(bbf_num, hv_vals_adapt, 'r--')
+    plt.plot(bbf_num, hv_vals_unadapt, 'b--')
     plt.xlabel("Number of blackbox function evaluations")
     plt.ylabel("Percent of total hypervolume dominated")
     plt.legend()

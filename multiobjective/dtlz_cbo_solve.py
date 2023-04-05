@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     # define the search method and scalarization
     search = CBO(hpo.problem, evaluator,
-                 moo_scalarization_strategy="Chebyshev")
+                 moo_scalarization_strategy="rChebyshev")
 
     # solve with BB_BUDGET evals
     results = search.search(max_evals=BB_BUDGET)
