@@ -64,58 +64,52 @@ if __name__ == "__main__":
         },
     )
 
-    # define the search method and scalarization
-    search = CBO(hpo.problem, evaluator,
-                 moo_scalarization_strategy="Chebyshev")
+    # define the search method(s) and scalarization
+    search1 = CBO(hpo.problem, evaluator,
+                  moo_scalarization_strategy="Chebyshev",
+                  moo_rescale_weight=True,
+                  moo_scalarization_weight="uniform sample")
+    search2 = CBO(hpo.problem, evaluator,
+                  moo_scalarization_strategy="Chebyshev",
+                  moo_rescale_weight=False,
+                  moo_scalarization_weight="uniform sample")
 
     # solve with BB_BUDGET evals
-    results = search.search(max_evals=BB_BUDGET)
+    results_scaled = search1.search(max_evals=BB_BUDGET)
+    results_unscaled = search2.search(max_evals=BB_BUDGET)
 
     # gather performance stats
     from ast import literal_eval
     from deephyper_benchmark.lib.dtlz.metrics import PerformanceEvaluator
 
     # Extract objective values from dataframe
-    obj_vals = np.asarray([literal_eval(fi)
-                           for fi in results["objective"].values])
+    obj_pts_scaled = np.asarray([literal_eval(fi) for
+                                 fi in results_scaled["objective"].values])
+    obj_pts_unscaled = np.asarray([literal_eval(fi) for
+                                   fi in results_unscaled["objective"].values])
     # Initialize performance arrays
-    rmse_vals = []
-    npts_vals = []
-    hv_vals = []
+    hv_vals_scaled = []
+    hv_vals_unscaled = []
     bbf_num = []
     # Create a performance evaluator for this problem and loop over budgets
     perf_eval = PerformanceEvaluator()
     for i in range(10, BB_BUDGET, 10):
-        hv_vals.append(perf_eval.hypervolume(obj_vals[:i, :]))
-        rmse_vals.append(perf_eval.rmse(obj_vals[:i, :]))
-        npts_vals.append(perf_eval.numPts(obj_vals[:i, :]))
+        hv_vals_scaled.append(perf_eval.hypervolume(obj_pts_scaled[:i, :]))
+        hv_vals_unscaled.append(perf_eval.hypervolume(obj_pts_unscaled[:i, :]))
         bbf_num.append(i)
     # Don't forget final budget
-    hv_vals.append(perf_eval.hypervolume(obj_vals))
-    rmse_vals.append(perf_eval.rmse(obj_vals))
-    npts_vals.append(perf_eval.numPts(obj_vals))
+    hv_vals_scaled.append(perf_eval.hypervolume(obj_pts_scaled))
+    hv_vals_unscaled.append(perf_eval.hypervolume(obj_pts_unscaled))
     bbf_num.append(BB_BUDGET)
 
-    # dump results to a csv file
-    import csv
-
-    with open(FILENAME, "a") as fp:
-        writer = csv.writer(fp)
-        writer.writerow(["Problem name", "metric", "input vars", "objectives"]
-                        + bbf_num)
-        writer.writerow([f"DLTZ{PROB_NUM}", "hypervol", str(NDIMS), str(NOBJS)]
-                         + hv_vals)
-        writer.writerow([f"DLTZ{PROB_NUM}", "RMSE", str(NDIMS), str(NOBJS)]
-                         + rmse_vals)
-        writer.writerow([f"DLTZ{PROB_NUM}", "num pts", str(NDIMS), str(NOBJS)]
-                         + npts_vals)
-
-    ## plot performance over time
-    #from matplotlib import pyplot as plt
-    #plt.scatter(bbf_num, hv_vals, c='r', s=50, label="")
-    #plt.plot(bbf_num, hv_vals, 'k--')
-    #plt.xlabel("Number of blackbox function evaluations")
-    #plt.ylabel("Percent of total hypervolume dominated")
-    #plt.legend()
-    #plt.tight_layout()
-    #plt.show()
+    # plot performance over time
+    from matplotlib import pyplot as plt
+    plt.scatter(bbf_num, hv_vals_scaled, c='r', s=50, label="Hypervolumes for scaled solver")
+    plt.scatter(bbf_num, hv_vals_unscaled, c='b', s=50, label="Hypervolumes for unscaled solver")
+    plt.plot(bbf_num, hv_vals_scaled, 'r--')
+    plt.plot(bbf_num, hv_vals_unscaled, 'b--')
+    plt.xlabel("Number of blackbox function evaluations")
+    plt.ylabel("Percent of total hypervolume dominated")
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
