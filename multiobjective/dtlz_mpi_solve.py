@@ -69,7 +69,7 @@ search = MPIDistributedBO(hpo.problem,
                           log_dir="dtlz_mpi_logs",
                           comm=comm)
 # Solve with BB_BUDGET evals
-results = search.search(max_evals=BB_BUDGET, timeout=10)
+results = search.search(max_evals=BB_BUDGET, timeout=100)
 
 # Gather performance stats
 if rank == 0:

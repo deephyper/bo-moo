@@ -2,7 +2,6 @@ from mpi4py import MPI
 
 from deephyper.search.hps import MPIDistributedBO
 
-
 from ackley import hp_problem, run
 
 comm = MPI.COMM_WORLD
