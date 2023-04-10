@@ -20,7 +20,7 @@ pip install --upgrade pip
 git clone -c feature.manyFiles=true https://github.com/spack/spack.git
 . ./spack/share/spack/setup-env.sh
 
-git clone git@github.com:deephyper/deephyper-spack-packages.git
+git clone https://github.com/deephyper/deephyper-spack-packages.git
 
 # Install RedisJson With Spack
 spack env create redisjson
@@ -30,13 +30,13 @@ spack add redisjson
 spack install
 
 # Clone DeepHyper (develop)
-git clone -b develop git@github.com:deephyper/deephyper.git
+git clone -b develop https://github.com/deephyper/deephyper.git
 
 # Install DeepHyper with Redis
 pip install -e "deephyper/[default,mpi,redis]"
 
 # Install Benchmarks
-git clone git@github.com:deephyper/benchmark.git deephyper-benchmark
+git clone https://github.com/deephyper/benchmark.git deephyper-benchmark
 pip install -e "deephyper-benchmark/"
 
 # Copy activation of environment file
