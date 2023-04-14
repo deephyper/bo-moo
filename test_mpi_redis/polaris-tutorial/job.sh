@@ -10,8 +10,8 @@ set -xe
 
 cd ${PBS_O_WORKDIR}
 
-
-source ../../../build/activate-dhenv.sh
+# source ../../../build/activate-dhenv.sh
+source ../../../scalable-bo/build/activate-dhenv.sh
 
 # Configuration to place 1 worker per GPU
 export NDEPTH=16
@@ -20,16 +20,16 @@ export NNODES=`wc -l < $PBS_NODEFILE`
 export NTOTRANKS=$(( $NNODES * $NRANKS_PER_NODE ))
 export OMP_NUM_THREADS=$NDEPTH
 
+export log_dir="mpi-distributed-log"
+mkdir -p $log_dir
 
 # Setup Redis Database
 pushd $log_dir
-redis-server $REDIS_CONF &
+redis-server $REDIS_CONF --requirepass "helloworld" &
 export DEEPHYPER_DB_HOST=$HOST
 popd
 
 sleep 5
-
-mkdir -p mpi-distributed-log
 
 # Run the DeepHyper script
 mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \

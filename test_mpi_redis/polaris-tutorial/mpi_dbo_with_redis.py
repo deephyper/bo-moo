@@ -56,3 +56,5 @@ search = MPIDistributedBO(
 
 # The search is started with a timeout of 2 minutes.
 results = search.search(timeout=120)
+
+print(results)
