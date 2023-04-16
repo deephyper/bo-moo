@@ -14,7 +14,7 @@ from mpi4py import MPI
 from deephyper.search.hps import MPIDistributedBO
 
 # Set default problem parameters
-FILENAME = "dtlz_perf_results.csv"
+FILENAME = "results.csv"
 PROB_NUM = "2"
 BB_BUDGET = 1000 # 200 eval budget
 NDIMS = 8 # 8 vars
@@ -66,7 +66,7 @@ evaluator = MPIDistributedBO.bootstrap_evaluator(
 search = MPIDistributedBO(hpo.problem,
                           evaluator,
                           moo_scalarization_strategy="rChebyshev",
-                          log_dir="dtlz_mpi_logs",
+                          log_dir="dtlz_mpi_logs-C",
                           comm=comm)
 # Solve with BB_BUDGET evals
 results = search.search(max_evals=BB_BUDGET, timeout=10800)
@@ -103,11 +103,11 @@ if rank == 0:
     import csv
     with open(FILENAME, "a") as fp:
         writer = csv.writer(fp)
-        writer.writerow(["Problem name", "metric", "input vars", "objectives"]
+        writer.writerow(["Problem name", "method", "metric", "input vars", "objectives"]
                         + bbf_num)
-        writer.writerow([f"DLTZ{PROB_NUM}", "hypervol", str(NDIMS), str(NOBJS)]
+        writer.writerow([f"DLTZ{PROB_NUM}", "DH Cheb", "hypervol", str(NDIMS), str(NOBJS)]
                          + hv_vals)
-        writer.writerow([f"DLTZ{PROB_NUM}", "RMSE", str(NDIMS), str(NOBJS)]
+        writer.writerow([f"DLTZ{PROB_NUM}", "DH Cheb", "RMSE", str(NDIMS), str(NOBJS)]
                          + rmse_vals)
-        writer.writerow([f"DLTZ{PROB_NUM}", "num pts", str(NDIMS), str(NOBJS)]
+        writer.writerow([f"DLTZ{PROB_NUM}", "DH Cheb", "num pts", str(NDIMS), str(NOBJS)]
                          + npts_vals)
