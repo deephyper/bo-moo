@@ -57,8 +57,10 @@ echo "spack env activate redisjson" >> activate-dhenv.sh
 
 # Redis Configuration
 cp ../install/env/redis.conf redis.conf
+echo "" >> redis.conf
 cat $(spack find --path redisjson | grep -o "/.*/redisjson.*")/redis.conf >> redis.conf
-cat "protected-mode no" >> redis.conf
+echo "" >> redis.conf
+echo "protected-mode no" >> redis.conf
 
 # Install the Combo Benchmark
 python -c 'from deephyper_benchmark import *; install("ECP-Candle/Pilot1/Combo");'
