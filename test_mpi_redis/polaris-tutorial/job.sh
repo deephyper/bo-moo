@@ -21,7 +21,7 @@ export NTOTRANKS=$(( $NNODES * $NRANKS_PER_NODE ))
 export OMP_NUM_THREADS=$NDEPTH
 
 export log_dir="mpi-distributed-log"
-export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf"
+export REDIS_CONF="../../../scalable-bo/build/redis.conf"
 
 mkdir -p $log_dir
 
