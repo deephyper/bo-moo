@@ -23,8 +23,8 @@ num_obj = 3
 
 ### Budget variables ###
 n_search_sz = 100 # 1000 pt initial DOE
-n_per_batch = 10  # batch size = 100
-iters_limit = 9   # run for 90 iterations
+n_per_batch = 100 # batch size = 100
+iters_limit = 90  # run for 90 iterations
 
 from tlux.approximate.axy import AXY
 from parmoo.structs import SurrogateFunction
