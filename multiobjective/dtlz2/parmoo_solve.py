@@ -183,6 +183,41 @@ results_rbf = moop_rbf.getObjectiveData(format='pandas')
 results_rbf.to_csv("parmoo-rbf/results.csv")
 
 
+### Start solving problem with TR iterations ###
+from parmoo.optimizers import TR_LBFGSB
+from parmoo.surrogates import LocalGaussRBF
+
+moop_tr = MOOP(TR_LBFGSB)
+
+for i in range(num_des):
+    moop_tr.addDesign({'name': f"x{i+1}",
+                       'des_type': "continuous",
+                       'lb': 0.0, 'ub': 1.0})
+
+moop_tr.addSimulation({'name': "DTLZ_out",
+                       'm': num_obj,
+                       'sim_func': sim_func(moop_tr.getDesignType(),
+                                            num_obj=num_obj, offset=0.5),
+                       'search': LatinHypercube,
+                       'surrogate': LocalGaussRBF,
+                       'hyperparams': {'search_budget': n_search_sz}})
+
+for i in range(num_obj):
+    moop_tr.addObjective({'name': f"f{i+1}",
+                          'obj_func': single_sim_out(moop_tr.getDesignType(),
+                                                     moop_tr.getSimulationType(),
+                                                     ("DTLZ_out", i))})
+
+for i in range(n_per_batch):
+   moop_tr.addAcquisition({'acquisition': RandomConstraint,
+                           'hyperparams': {}})
+
+# Solve with 10 iteration * 10 candidates per iteration + 100 pt search = 200 sim budget
+moop_tr.solve(iters_limit)
+results_rbf = moop_tr.getObjectiveData(format='pandas')
+results_rbf.to_csv("parmoo-tr/results.csv")
+
+
 
 ## Filter out bad points
 #for i, fi in enumerate(results_axy):
