@@ -70,7 +70,7 @@ with open(f"{DNAME}/{FILENAME}", "r") as fp:
         if i > 100 and (i - 1) % 100 == 0:
             hv_vals.append(perf_eval.hypervolume(np.asarray(obj_vals)))
             bbf_num.append(len(obj_vals))
-plt.plot(bbf_num, hv_vals, "-o", label="parmoo AXY")
+plt.plot(bbf_num, hv_vals, "-o", label="parmoo-AXY")
 # And add parmoo + rbf to plot
 DNAME = "parmoo-rbf"
 hv_vals = []
@@ -84,7 +84,21 @@ with open(f"{DNAME}/{FILENAME}", "r") as fp:
         if i > 100 and (i - 1) % 100 == 0:
             hv_vals.append(perf_eval.hypervolume(np.asarray(obj_vals)))
             bbf_num.append(len(obj_vals))
-plt.plot(bbf_num, hv_vals, "-o", label="parmoo RBF")
+plt.plot(bbf_num, hv_vals, "-o", label="parmoo-RBF")
+# And add parmoo + tr to plot
+DNAME = "parmoo-tr"
+hv_vals = []
+bbf_num = []
+obj_vals = []
+with open(f"{DNAME}/{FILENAME}", "r") as fp:
+    reader = csv.reader(fp)
+    for i, row in enumerate(reader):
+        if i > 0:
+            obj_vals.append([float(fi) for fi in row[-3:]])
+        if i > 100 and (i - 1) % 100 == 0:
+            hv_vals.append(perf_eval.hypervolume(np.asarray(obj_vals)))
+            bbf_num.append(len(obj_vals))
+plt.plot(bbf_num, hv_vals, "-o", label="parmoo-local")
 
 # Add legends and show
 plt.xlabel("Number of blackbox function evaluations")
