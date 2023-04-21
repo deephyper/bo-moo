@@ -45,11 +45,11 @@ class AxySurrogate(SurrogateFunction):
    def fit(self, x, f):
       self.x.append(x)
       self.f.append(f)
-      self.model = AXY(mds=32, mns=4)
+      self.model = AXY(mds=128, mns=4)
       self.model.fit(
          x=np.concatenate(self.x, axis=0),
          y=np.concatenate(self.f, axis=0),
-         steps=1000,
+         steps=3000,
          min_update_ratio=1.0,
       )
 
