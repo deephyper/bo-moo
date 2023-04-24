@@ -1,0 +1,73 @@
+DeepHyper handles problems with more than one objective (multiobjective
+optimization problems) by using a scalarization function to reduce the
+problem to a single objective. By utilizing one or more scalarizations,
+DeepHyper can produce numerous Pareto optimal solutions in parallel without
+significant modification to its scalable Bayesian optimization framework.
+In general, if $F(x)$ is a multiobjective function, then each of DeepHyper's
+scalarizations solves the problem
+$$
+\min_x G(F(x))
+$$
+where $G : \mathbb{R}^o \rightarrow \mathbb{R}$.
+
+Currently, the available options for the scalarization function $G$ include
+five common methods from the multiobjective literature, specifically,
+the weighted-sum method (Linear), weighted quadratic-sum method (Quadratic),
+weighted Chebyshev (Chebyshev), weighted augmented Chebyshev (AugChebyshev),
+and penalty boundary intersection (PBI).
+
+Let $w \geq 0$ be a vector of weights in $\mathbb{R}^o$, let $z$ be a utopia
+point, and let $W$ be a positive-definite matrix. Then the linear
+scalarization is given by
+$$
+G_{L}(F; w) = w^\top (-F);
+$$
+the quadratic scalarization is given by
+$$
+G_{Q}(F; W, z) = |F - z|^\top W |F - z|;
+$$
+the Chebyshev scalarization is given by
+$$
+G_{C}(F; w, z) = \max_{i=1,\ldots,o} w_i|F_i - z_i|;
+$$
+the AugChebyshev scalarization is given by
+$$
+G_{A}(F; w, z) = (\max_{i=1,\ldots,o} w_i|F_i - z_i|)
+                 + \alpha\sum_{i=1}^o|F_i - z_i|;
+$$
+and the PBI scalarization is given by
+$$
+G_{P}(F; w, z) = d_1(z - F; w) + \theta d_2(z - F; w)
+$$
+where $d_1(y; w) = |y^\top w / \|w\||$ and
+$d_2(y; w) = \|y - d_1 w / \|w\|\|$.
+
+Each of the above methods can be used with a fixed $w$/$W$ in cases where a
+domain-specific weighting is known a priori, or different weightings can be
+provided to each worker to achieve Pareto front coverage. Alternatively,
+DeepHyper can uniformly sample all new scalarization weights in each iteration
+in order to heuristically achieve uniform coverage of the Pareto front.
+
+To read more about each of these schemes, a few useful references are provided
+below
+
+@inproceedings{chugh2020scalarizing,
+  title={Scalarizing functions in Bayesian multiobjective optimization},
+  author={Chugh, Tinkle},
+  booktitle={2020 IEEE Congress on Evolutionary Computation (CEC)},
+  pages={1--8},
+  year={2020},
+  organization={IEEE}
+}
+
+@article{dandurand2016quadratic,
+  title={Quadratic scalarization for decomposed multiobjective optimization},
+  author={Dandurand, Brian and Wiecek, Margaret M.},
+  journal={OR spectrum},
+  volume={38},
+  number={4},
+  pages={1071--1096},
+  year={2016},
+  publisher={Springer}
+}
+
