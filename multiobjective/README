@@ -1,0 +1,32 @@
+DeepHyper handles problems with more than one objective (multiobjective
+optimization problems) by using a scalarization function to reduce the
+problem to a single objective. By utilizing one or more scalarizations,
+DeepHyper can produce numerous Pareto optimal solutions in parallel without
+significant modification to its scalable Bayesian optimization framework.
+In general, if $F(x)$ is a multiobjective function, then each of DeepHyper's
+scalarizations solves the problem
+$$
+\max_x G(F(x))
+$$
+where $G : \mathbb{R}^o \rightarrow \mathbb{R}$.
+
+Currently, the available options for the scalarization function $G$ include
+five common methods from the multiobjective literature, specifically,
+the weighted-sum method (Linear), weighted quadratic-sum method (Quadratic),
+weighted Chebyshev (Chebyshev), weighted augmented Chebyshev (AugChebyshev),
+and penalty boundary intersection (PBI). Each of these methods can be used
+with a fixed weighting in cases where a domain-specific weighting is known
+a priori, or different weightings can be provided to each worker to achieve
+Pareto front coverage. Alternatively, each scalarization can be run with a
+randomized weighting, where new weights are uniform-randomly sampled in each
+iteration in order to produce uniform coverage of the Pareto front.
+
+To read more about these schemes, see:
+@inproceedings{chugh2020scalarizing,
+  title={Scalarizing functions in Bayesian multiobjective optimization},
+  author={Chugh, Tinkle},
+  booktitle={2020 IEEE Congress on Evolutionary Computation (CEC)},
+  pages={1--8},
+  year={2020},
+  organization={IEEE}
+}
