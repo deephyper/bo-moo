@@ -65,6 +65,7 @@ evaluator = MPIDistributedBO.bootstrap_evaluator(
 # define the search method and scalarization
 search = MPIDistributedBO(hpo.problem,
                           evaluator,
+                          update_prior=True,
                           moo_scalarization_strategy="rLinear",
                           log_dir="dtlz_mpi_logs-L",
                           comm=comm)
