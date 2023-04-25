@@ -23,7 +23,7 @@ num_obj = 3
 ### Budget variables ###
 n_search_sz = 2000 # 2000 pt initial DOE
 n_per_batch = 100  # batch size = 100
-iters_limit = 40   # run for 40 iterations
+iters_limit = 80   # run for 80 iterations
 
 
 ### Start solving problem with RBF surrogate ###
