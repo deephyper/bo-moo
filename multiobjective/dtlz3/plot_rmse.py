@@ -107,6 +107,7 @@ plt.plot(bbf_num, hv_vals, "-o", label="parmoo-local")
 # Add legends and show
 plt.xlabel("Number of blackbox function evaluations")
 plt.ylabel("RMSE over all residuals")
+plt.yscale("log")
 plt.legend(loc="upper right")
 plt.tight_layout()
 plt.show()
