@@ -13,27 +13,19 @@ logging.basicConfig(
 from mpi4py import MPI
 from deephyper.search.hps import MPIDistributedBO
 
+# Set the random seed from CL or system clock
+if len(sys.argv) > 1:
+    SEED = int(sys.argv[1])
+else:
+    from datetime import datetime
+    SEED = datetime.now().timestamp()
+FILENAME = f"dtlz_mpi_logs-AC/results_seed{SEED}.csv"
+
 # Set default problem parameters
-SEED = 0 # Random seed
-FILENAME = f"dtlz_mpi_logs-C/results_seed{SEED}.csv"
 PROB_NUM = "2"
 BB_BUDGET = 10000 # 10K eval budget
 NDIMS = 8 # 8 vars
 NOBJS = 3 # 3 objs
-
-# If present, read problem definition from CL
-if len(sys.argv) > 1:
-    assert sys.argv[1] in [str(i) for i in range(1, 8)]
-    PROB_NUM = sys.argv[1]
-if len(sys.argv) > 2:
-    assert int(sys.argv[2]) > 0
-    NDIMS = int(sys.argv[2])
-if len(sys.argv) > 3:
-    assert int(sys.argv[3]) > 0 and int(sys.argv[3]) < NDIMS
-    NOBJS = int(sys.argv[3])
-if len(sys.argv) > 4:
-    assert int(sys.argv[4]) > 0
-    BB_BUDGET = int(sys.argv[4])
 
 # Set DTLZ problem environment variables
 os.environ["DEEPHYPER_BENCHMARK_NDIMS"] = str(NDIMS)
