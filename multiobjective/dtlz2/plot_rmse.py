@@ -38,9 +38,9 @@ for di, DNAME in enumerate(dirs):
         plt.plot(bbf_mean, rmse_mean, "-", color=f"{colors[di]}", label=labels[di])
         # If more than 1 result, plot std errors
         if n > 1 and CONF_BOUND:
-            hv_stde = np.std(np.array(hv_vals), axis=0) / np.sqrt(n)
-            rmse_stde = np.std(np.array(rmse_vals), axis=0) / np.sqrt(n)
-            plt.fill_between(bbf_mean, rmse_mean - rmse_stde, rmse_mean + rmse_stde,
+            hv_std = np.std(np.array(hv_vals), axis=0)
+            rmse_std = np.std(np.array(rmse_vals), axis=0)
+            plt.fill_between(bbf_mean, rmse_mean - rmse_std, rmse_mean + rmse_std,
                              color=f"{colors[di]}", alpha=0.2)
 
 # Add legends and show
