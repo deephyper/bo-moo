@@ -39,4 +39,4 @@ mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    python dtlz_mpi_solve_C.py
+    python dtlz_mpi_solve_C.py 1

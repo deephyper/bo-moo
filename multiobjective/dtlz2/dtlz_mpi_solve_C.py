@@ -2,14 +2,6 @@ import logging
 import os
 import sys
 
-# Setup info-level logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(filename)s:%(funcName)s - " + \
-           "%(message)s",
-    force=True,
-)
-
 from mpi4py import MPI
 from deephyper.search.hps import MPIDistributedBO
 
@@ -19,7 +11,7 @@ if len(sys.argv) > 1:
 else:
     from datetime import datetime
     SEED = datetime.now().timestamp()
-FILENAME = f"dtlz_mpi_logs-AC/results_seed{SEED}.csv"
+FILENAME = f"dtlz_mpi_logs-C/results_seed{SEED}.csv"
 
 # Set default problem parameters
 PROB_NUM = "2"
@@ -41,6 +33,15 @@ from deephyper_benchmark.lib.dtlz import hpo
 # Create MPI ranks
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
+
+# Setup info-level logging
+if rank == 0:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(filename)s:%(funcName)s - " + \
+               "%(message)s",
+        force=True,
+    )
 
 # define MPI evaluator
 evaluator = MPIDistributedBO.bootstrap_evaluator(
