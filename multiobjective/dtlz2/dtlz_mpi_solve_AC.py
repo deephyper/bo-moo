@@ -15,7 +15,7 @@ from deephyper.search.hps import MPIDistributedBO
 
 # Set default problem parameters
 SEED = 0 # Random seed
-FILENAME = f"results_seed{SEED}.csv"
+FILENAME = f"dtlz_mpi_logs-AC/results_seed{SEED}.csv"
 PROB_NUM = "2"
 BB_BUDGET = 10000 # 10K eval budget
 NDIMS = 8 # 8 vars
