@@ -2,6 +2,8 @@ import csv
 from matplotlib import pyplot as plt
 import numpy as np
 
+CONF_BOUND = True
+
 # Dirs, names, and colors
 dirs = ["dtlz_mpi_logs-AC", "dtlz_mpi_logs-C", "dtlz_mpi_logs-L",
         "dtlz_mpi_logs-P", "dtlz_mpi_logs-Q", "pymoo", "parmoo-rbf",
@@ -25,7 +27,7 @@ for di, DNAME in enumerate(dirs):
                 hv_vals.append([float(x) for x in csv_reader.__next__()])
                 rmse_vals.append([float(x) for x in csv_reader.__next__()])
         except FileNotFoundError:
-            print(f"skipping deephyper-{DNAME}")
+            print(f"skipping {DNAME}")
     # Check how many results found
     n = len(bbf_num)
     if n > 0:
@@ -35,10 +37,10 @@ for di, DNAME in enumerate(dirs):
         rmse_mean = np.mean(np.array(rmse_vals), axis=0)
         plt.plot(bbf_mean, rmse_mean, "-", color=f"{colors[di]}", label=labels[di])
         # If more than 1 result, plot std errors
-        if n > 1:
+        if n > 1 and CONF_BOUND:
             hv_stde = np.std(np.array(hv_vals), axis=0) / np.sqrt(n)
             rmse_stde = np.std(np.array(rmse_vals), axis=0) / np.sqrt(n)
-            plt.fill_between(bbf_num, rmse_mean - rmse_stde, rmse_mean + rmse_stde,
+            plt.fill_between(bbf_mean, rmse_mean - rmse_stde, rmse_mean + rmse_stde,
                              color=f"{colors[di]}", alpha=0.2)
 
 # Add legends and show

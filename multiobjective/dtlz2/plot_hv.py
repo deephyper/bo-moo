@@ -2,6 +2,8 @@ import csv
 from matplotlib import pyplot as plt
 import numpy as np
 
+CONF_BOUND = True
+
 # Dirs, names, and colors
 dirs = ["dtlz_mpi_logs-AC", "dtlz_mpi_logs-C", "dtlz_mpi_logs-L",
         "dtlz_mpi_logs-P", "dtlz_mpi_logs-Q", "pymoo", "parmoo-rbf",
@@ -36,10 +38,10 @@ for di, DNAME in enumerate(dirs):
         print(hv_mean)
         plt.plot(bbf_mean, hv_mean, "-", color=f"{colors[di]}", label=labels[di])
         # If more than 1 result, plot std errors
-        if n > 1:
+        if n > 1 and CONF_BOUND:
             hv_stde = np.std(np.array(hv_vals), axis=0) / np.sqrt(n)
             rmse_stde = np.std(np.array(rmse_vals), axis=0) / np.sqrt(n)
-            plt.fill_between(bbf_num, hv_mean - hv_stde, hv_mean + hv_stde,
+            plt.fill_between(bbf_mean, hv_mean - hv_stde, hv_mean + hv_stde,
                              color=f"{colors[di]}", alpha=0.2)
 
 # Add legends and show
