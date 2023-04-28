@@ -17,6 +17,15 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(levelname)-8s %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 
+# Set the random seet from CL or system clock
+import sys
+if len(sys.argv) > 1:
+    SEED = int(sys.argv[1])
+else:
+    from datetime import datetime
+    SEED = datetime.now().timestamp()
+FILENAME = f"parmoo-axy/results_seed{SEED}.csv"
+
 ### Problem dimensions ###
 num_des = 8
 num_obj = 3
@@ -110,6 +119,8 @@ class AxySurrogate(SurrogateFunction):
 
 ### Start solving problem with AXY surrogate ###
 
+np.random.seed(SEED)
+
 moop_axy = MOOP(LocalGPS)
 
 for i in range(num_des):
@@ -135,18 +146,37 @@ for i in range(n_per_batch):
    moop_axy.addAcquisition({'acquisition': RandomConstraint,
                             'hyperparams': {}})
 
-# Solve and dumpy to csv
+# Solve and get results
 moop_axy.solve(iters_limit)
 results_axy = moop_axy.getObjectiveData(format='pandas')
-results_axy.to_csv("parmoo-axy/results.csv")
 
-### Uncomment ParMOO's outputs below ###
 
-## Display solution
-#print(results_axy, "\n dtype=" + str(results_axy.dtype))
-#
-## Plot results -- must have extra viz dependencies installed
-#from parmoo.viz import scatter
-## The optional arg `output` exports directly to jpg instead of interactive mode
-#scatter(moop_axy, output="jpeg")
+# Set DTLZ problem environment variables
+os.environ["DEEPHYPER_BENCHMARK_NDIMS"] = str(NDIMS)
+os.environ["DEEPHYPER_BENCHMARK_NOBJS"] = str(NOBJS)
+os.environ["DEEPHYPER_BENCHMARK_DTLZ_PROB"] = PROB_NUM # DTLZ2 problem
+os.environ["DEEPHYPER_BENCHMARK_DTLZ_OFFSET"] = "0.5" # [x_o, .., x_d]*=0.5
 
+# Load deephyper performance evaluator
+from deephyper_benchmark.lib.dtlz.metrics import PerformanceEvaluator
+
+# Collect performance stats
+obj_vals = []
+hv_vals = []
+rmse_vals = []
+bbf_num = []
+perf_eval = PerformanceEvaluator()
+for i, row in enumerate(results_axy.rows):
+    obj_vals.append([row['f1'], row['f2'], row['f3']])
+    if (i+1) > 99 and (i+1) % 100 == 0:
+        rmse_vals.append(perf_eval.rmse(np.asarray(obj_vals)))
+        hv_vals.append(perf_eval.hypervolume(np.asarray(obj_vals)))
+        bbf_num.append(len(obj_vals))
+
+# Dump results to csv file
+import csv
+with open(FILENAME, "w") as fp:
+    writer = csv.writer(fp)
+    writer.writerow(bbf_num)
+    writer.writerow(hv_vals)
+    writer.writerow(rmse_vals)

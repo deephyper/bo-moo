@@ -14,7 +14,8 @@ from mpi4py import MPI
 from deephyper.search.hps import MPIDistributedBO
 
 # Set default problem parameters
-FILENAME = "results.csv"
+SEED = 0 # Random seed
+FILENAME = f"results_seed{SEED}.csv"
 PROB_NUM = "2"
 BB_BUDGET = 10000 # 10K eval budget
 NDIMS = 8 # 8 vars
@@ -68,6 +69,7 @@ search = MPIDistributedBO(hpo.problem,
                           update_prior=True,
                           moo_scalarization_strategy="rAugChebyshev",
                           log_dir="dtlz_mpi_logs-AC",
+                          random_state=SEED,
                           comm=comm)
 # Solve with BB_BUDGET evals
 results = search.search(max_evals=BB_BUDGET, timeout=10800)
@@ -89,7 +91,7 @@ if rank == 0:
     bbf_num = []
     # Create a performance evaluator for this problem and loop over budgets
     perf_eval = PerformanceEvaluator()
-    for i in range(10, BB_BUDGET, 10):
+    for i in range(100, BB_BUDGET, 100):
         hv_vals.append(perf_eval.hypervolume(obj_vals[:i, :]))
         rmse_vals.append(perf_eval.rmse(obj_vals[:i, :]))
         npts_vals.append(perf_eval.numPts(obj_vals[:i, :]))
@@ -97,18 +99,12 @@ if rank == 0:
     # Don't forget final budget
     hv_vals.append(perf_eval.hypervolume(obj_vals))
     rmse_vals.append(perf_eval.rmse(obj_vals))
-    npts_vals.append(perf_eval.numPts(obj_vals))
     bbf_num.append(BB_BUDGET)
 
     # Dump results to csv file
     import csv
-    with open(FILENAME, "a") as fp:
+    with open(FILENAME, "w") as fp:
         writer = csv.writer(fp)
-        writer.writerow(["Problem name", "method", "metric", "input vars", "objectives"]
-                        + bbf_num)
-        writer.writerow([f"DLTZ{PROB_NUM}", "DH AugCheb", "hypervol", str(NDIMS), str(NOBJS)]
-                         + hv_vals)
-        writer.writerow([f"DLTZ{PROB_NUM}", "DH AugCheb", "RMSE", str(NDIMS), str(NOBJS)]
-                         + rmse_vals)
-        writer.writerow([f"DLTZ{PROB_NUM}", "DH AugCheb", "num pts", str(NDIMS), str(NOBJS)]
-                         + npts_vals)
+        writer.writerow(bbf_num)
+        writer.writerow(hv_vals)
+        writer.writerow(rmse_vals)

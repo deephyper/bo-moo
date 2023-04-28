@@ -16,6 +16,14 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(levelname)-8s %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 
+# Set the random seed from CL or system clock
+import sys
+if len(sys.argv) > 1:
+    SEED = int(sys.argv[1])
+else:
+    from datetime import datetime
+    SEED = datetime.now().timestamp()
+
 ### Problem dimensions ###
 num_des = 8
 num_obj = 3
@@ -27,6 +35,8 @@ iters_limit = 90   # run for 90 iterations
 
 
 ### Start solving problem with RBF surrogate ###
+
+np.random.seed(SEED)
 
 moop_rbf = MOOP(LocalGPS)
 
@@ -56,12 +66,45 @@ for i in range(n_per_batch):
 # Solve and dump to csv
 moop_rbf.solve(iters_limit)
 results_rbf = moop_rbf.getObjectiveData(format='pandas')
-results_rbf.to_csv("parmoo-rbf/results.csv")
+FILENAME = f"parmoo-rbf/results_seed{SEED}.csv"
+
+
+# Set DTLZ problem environment variables
+os.environ["DEEPHYPER_BENCHMARK_NDIMS"] = str(NDIMS)
+os.environ["DEEPHYPER_BENCHMARK_NOBJS"] = str(NOBJS)
+os.environ["DEEPHYPER_BENCHMARK_DTLZ_PROB"] = PROB_NUM # DTLZ2 problem
+os.environ["DEEPHYPER_BENCHMARK_DTLZ_OFFSET"] = "0.5" # [x_o, .., x_d]*=0.5
+
+# Load deephyper performance evaluator
+from deephyper_benchmark.lib.dtlz.metrics import PerformanceEvaluator
+
+# Collect performance stats
+obj_vals = []
+hv_vals = []
+rmse_vals = []
+bbf_num = []
+perf_eval = PerformanceEvaluator()
+for i, row in enumerate(results_rbf.rows):
+    obj_vals.append([row['f1'], row['f2'], row['f3']])
+    if (i+1) > 99 and (i+1) % 100 == 0:
+        rmse_vals.append(perf_eval.rmse(np.asarray(obj_vals)))
+        hv_vals.append(perf_eval.hypervolume(np.asarray(obj_vals)))
+        bbf_num.append(len(obj_vals))
+
+# Dump results to csv file
+import csv
+with open(FILENAME, "w") as fp:
+    writer = csv.writer(fp)
+    writer.writerow(hv_vals)
+    writer.writerow(rmse_vals)
+    writer.writerow(bbf_num)
 
 
 ### Start solving problem with TR iterations ###
 from parmoo.optimizers import TR_LBFGSB
 from parmoo.surrogates import LocalGaussRBF
+
+np.random.seed(SEED)
 
 moop_tr = MOOP(TR_LBFGSB)
 
@@ -90,76 +133,27 @@ for i in range(n_per_batch):
 
 # Solve and dump to csv
 moop_tr.solve(iters_limit)
-results_rbf = moop_tr.getObjectiveData(format='pandas')
-results_rbf.to_csv("parmoo-tr/results.csv")
+results_tr = moop_tr.getObjectiveData(format='pandas')
+FILENAME = f"parmoo-tr/results_seed{SEED}.csv"
 
 
+# Collect performance stats
+obj_vals = []
+hv_vals = []
+rmse_vals = []
+bbf_num = []
+perf_eval = PerformanceEvaluator()
+for i, row in enumerate(results_tr.rows):
+    obj_vals.append([row['f1'], row['f2'], row['f3']])
+    if (i+1) > 99 and (i+1) % 100 == 0:
+        rmse_vals.append(perf_eval.rmse(np.asarray(obj_vals)))
+        hv_vals.append(perf_eval.hypervolume(np.asarray(obj_vals)))
+        bbf_num.append(len(obj_vals))
 
-## Filter out bad points
-#for i, fi in enumerate(results_axy):
-#    if any([fi["f1"] > 1, fi["f2"] > 1, fi["f3"] > 1]):
-#        results_axy[i]["f1"] = 1.0
-#        results_axy[i]["f2"] = 1.0
-#        results_axy[i]["f3"] = 1.0
-#for i, fi in enumerate(results_rbf):
-#    if any([fi["f1"] > 1, fi["f2"] > 1, fi["f3"] > 1]):
-#        results_rbf[i]["f1"] = 1.0
-#        results_rbf[i]["f2"] = 1.0
-#        results_rbf[i]["f3"] = 1.0
-#
-## We need pymoo to calculate hypervolume indicator of solution set
-#from pymoo.indicators.hv import HV
-#pts_axy = np.reshape(results_axy["f1"], (results_axy["f1"].size, 1))
-#for i in range(1, num_obj):
-#    pts_axy = np.concatenate((pts_axy, np.reshape(results_axy[f"f{i+1}"],
-#                                                  (results_axy["f1"].size, 1))), axis=1)
-#pts_rbf = np.reshape(results_rbf["f1"], (results_rbf["f1"].size, 1))
-#for i in range(1, num_obj):
-#    pts_rbf = np.concatenate((pts_rbf, np.reshape(results_rbf[f"f{i+1}"],
-#                                                  (results_rbf["f1"].size, 1))), axis=1)
-## Calculate reference point based on solutions
-#rp = np.ones(num_obj) # * np.max(np.concatenate((pts_axy, pts_rbf), axis=0))
-#hv = HV(ref_point=rp)
-## Initialize plotly trace arrays
-#hv_axy = []
-#hv_rbf = []
-#iter_count = [i for i in range(iters_limit)]
-## Now iterate over all iterations
-#total_budget = n_search_sz + n_per_batch * iters_limit
-#for i in range(n_search_sz, total_budget, n_per_batch):
-#    hv_axy.append(hv(pts_axy[:i, :])) # / np.prod(rp))
-#    hv_rbf.append(hv(pts_rbf[:i, :])) # / np.prod(rp))
-#
-#### Generate plotly graphs of results ###
-#
-#fig = go.Figure()
-## Add performance lines
-#fig.add_trace(go.Scatter(x=iter_count, y=hv_axy, mode='lines',
-#                         name="ParMOO + AXY surrogate",
-#                         line=dict(color="blue", width=2),
-#                         showlegend=True))
-#fig.add_trace(go.Scatter(x=iter_count, y=hv_rbf, mode='lines',
-#                         name="ParMOO + RBF surrogate",
-#                         line=dict(color="red", width=2),
-#                         showlegend=True))
-## Set the figure style/layout
-#fig.update_layout(
-#    xaxis=dict(title="iteration",
-#               showline=True,
-#               showgrid=True,
-#               showticklabels=True,
-#               linecolor='rgb(204, 204, 204)',
-#               linewidth=2,
-#               ticks='outside',
-#               tickfont=dict(family='Arial', size=12)),
-#    yaxis=dict(title="% total hypervolume",
-#               showline=True,
-#               showgrid=True,
-#               showticklabels=True,
-#               linecolor='rgb(204, 204, 204)',
-#               linewidth=2,
-#               ticks='outside',
-#               tickfont=dict(family='Arial', size=12)),
-#    plot_bgcolor='white', width=500, height=300,
-#    margin=dict(l=80, r=50, t=20, b=20))
-#fig.show()
+# Dump results to csv file
+import csv
+with open(FILENAME, "w") as fp:
+    writer = csv.writer(fp)
+    writer.writerow(hv_vals)
+    writer.writerow(rmse_vals)
+    writer.writerow(bbf_num)
