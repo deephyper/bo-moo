@@ -29,6 +29,7 @@ FILENAME = f"parmoo-axy/results_seed{SEED}.csv"
 ### Problem dimensions ###
 num_des = 8
 num_obj = 3
+PROB_NUM = 2
 
 ### Budget variables ###
 n_search_sz = 1000 # 1000 pt initial DOE
@@ -152,13 +153,14 @@ results_axy = moop_axy.getObjectiveData(format='pandas')
 
 
 # Set DTLZ problem environment variables
-os.environ["DEEPHYPER_BENCHMARK_NDIMS"] = str(NDIMS)
-os.environ["DEEPHYPER_BENCHMARK_NOBJS"] = str(NOBJS)
-os.environ["DEEPHYPER_BENCHMARK_DTLZ_PROB"] = PROB_NUM # DTLZ2 problem
+import os
+os.environ["DEEPHYPER_BENCHMARK_NDIMS"] = str(num_des)
+os.environ["DEEPHYPER_BENCHMARK_NOBJS"] = str(num_obj)
+os.environ["DEEPHYPER_BENCHMARK_DTLZ_PROB"] = str(PROB_NUM)
 os.environ["DEEPHYPER_BENCHMARK_DTLZ_OFFSET"] = "0.5" # [x_o, .., x_d]*=0.5
 
 # Load deephyper performance evaluator
-from deephyper_benchmark.lib.dtlz.metrics import PerformanceEvaluator
+from deephyper_benchmark.lib.DTLZ.metrics import PerformanceEvaluator
 
 # Collect performance stats
 obj_vals = []
@@ -166,7 +168,7 @@ hv_vals = []
 rmse_vals = []
 bbf_num = []
 perf_eval = PerformanceEvaluator()
-for i, row in enumerate(results_axy.rows):
+for i, row in results_axy.iterrows():
     obj_vals.append([row['f1'], row['f2'], row['f3']])
     if (i+1) > 99 and (i+1) % 100 == 0:
         rmse_vals.append(perf_eval.rmse(np.asarray(obj_vals)))
