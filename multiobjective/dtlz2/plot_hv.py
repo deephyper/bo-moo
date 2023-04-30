@@ -35,7 +35,6 @@ for di, DNAME in enumerate(dirs):
         bbf_mean = np.mean(np.array(bbf_num), axis=0)
         hv_mean = np.mean(np.array(hv_vals), axis=0)
         rmse_mean = np.mean(np.array(rmse_vals), axis=0)
-        print(hv_mean)
         plt.plot(bbf_mean, hv_mean, "-", color=f"{colors[di]}", label=labels[di])
         # If more than 1 result, plot std devs
         if n > 1 and CONF_BOUND:
