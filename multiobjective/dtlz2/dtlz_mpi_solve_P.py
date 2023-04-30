@@ -10,7 +10,7 @@ if len(sys.argv) > 1:
     SEED = int(sys.argv[1])
 else:
     from datetime import datetime
-    SEED = datetime.now().timestamp()
+    SEED = int(datetime.now().timestamp())
 FILENAME = f"dtlz_mpi_logs-P/results_seed{SEED}.csv"
 
 # Set default problem parameters

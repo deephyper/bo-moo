@@ -8,7 +8,7 @@ from parmoo.acquisitions import RandomConstraint
 from parmoo.optimizers import LocalGPS
 #import plotly.graph_objects as go
 
-from parmoo.simulations.dtlz import dtlz2_sim as sim_func # change dtlz1_sim -> dtlz{1,2,3,4,5,6,7}_sim
+from parmoo.simulations.dtlz import dtlz1_sim as sim_func # change dtlz1_sim -> dtlz{1,2,3,4,5,6,7}_sim
 from parmoo.objectives.obj_lib import single_sim_out
 
 # Turn on logging with timestamps
@@ -29,7 +29,7 @@ FILENAME = f"parmoo-axy/results_seed{SEED}.csv"
 ### Problem dimensions ###
 num_des = 8
 num_obj = 3
-PROB_NUM = 2
+PROB_NUM = 1
 
 ### Budget variables ###
 n_search_sz = 1000 # 1000 pt initial DOE

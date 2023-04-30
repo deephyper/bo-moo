@@ -11,10 +11,10 @@ if len(sys.argv) > 1:
 else:
     from datetime import datetime
     SEED = int(datetime.now().timestamp())
-FILENAME = f"dtlz_mpi_logs-AC/results_seed{SEED}.csv"
+FILENAME = f"dtlz_mpi_logs-Q/results_seed{SEED}.csv"
 
 # Set default problem parameters
-PROB_NUM = "2"
+PROB_NUM = "1"
 BB_BUDGET = 10000 # 10K eval budget
 NDIMS = 8 # 8 vars
 NOBJS = 3 # 3 objs
@@ -59,10 +59,10 @@ evaluator = MPIDistributedBO.bootstrap_evaluator(
 # define the search method and scalarization
 search = MPIDistributedBO(hpo.problem,
                           evaluator,
-                          update_prior=True,
-                          moo_scalarization_strategy="rAugChebyshev",
-                          log_dir="dtlz_mpi_logs-AC",
                           random_state=SEED,
+                          update_prior=True,
+                          moo_scalarization_strategy="rQuadratic",
+                          log_dir="dtlz_mpi_logs-Q",
                           comm=comm)
 # Solve with BB_BUDGET evals
 results = search.search(max_evals=BB_BUDGET, timeout=10800)
