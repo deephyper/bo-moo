@@ -3,7 +3,7 @@
 #PBS -l place=scatter
 #PBS -l walltime=01:00:00
 #PBS -q debug 
-# #PBF -q prod
+##PBF -q preemptable
 #PBS -A datascience
 #PBS -l filesystems=grand:home
 
@@ -23,7 +23,7 @@ export OMP_NUM_THREADS=$NDEPTH
 export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf"
 
 # Set the seed
-export seed=3
+export seed=9
 
 ## Run DeepHyper AC
 ## Setup Redis Database
