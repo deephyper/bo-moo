@@ -9,7 +9,7 @@ import pandas
 FILENAME = "results.csv"
 BB_BUDGET = 100 # 100 eval budget
 
-nadir = np.asarray([100.0, 100.0])
+nadir = np.asarray([100.0, 10.0])
 
 # Gather performance stats
 for PNAME in ["AC", "C", "L", "P", "Q"]:
