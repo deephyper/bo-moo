@@ -7,11 +7,11 @@ CONF_BOUND = True
 # Dirs, names, and colors
 dirs = ["dtlz_mpi_logs-AC", "dtlz_mpi_logs-C", "dtlz_mpi_logs-L",
         "dtlz_mpi_logs-P", "dtlz_mpi_logs-Q", "pymoo", "parmoo-rbf",
-        "parmoo-axy", "parmoo-tr"]
+        "parmoo-axy", "parmoo-tr", "parmoo-gp"]
 labels = ["DeepHyper AugCheb", "DeepHyper Cheb", "DeepHyper Linear",
           "DeepHyper PBI", "DeepHyper Quad", "NSGA-II (pymoo)",
-          "ParMOO w/ GP", "ParMOO w/ NN", "ParMOO Local"]
-colors = ["g", "r", "b", "c", "m", "y", "brown", "orange", "violet"]
+          "ParMOO w/ RBF", "ParMOO w/ NN", "ParMOO Local", "ParMOO w/ GP"]
+colors = ["g", "r", "b", "c", "m", "y", "brown", "orange", "violet", "k"]
 
 # Gather performance stats
 for di, DNAME in enumerate(dirs):
