@@ -31,6 +31,8 @@ if rank == 0:
         force=True,
     )
 
+from deephyper_benchmark.lib.JAHSBench import hpo
+
 # define MPI evaluator
 evaluator = MPIDistributedBO.bootstrap_evaluator(
     hpo.run,
@@ -49,7 +51,7 @@ search = MPIDistributedBO(hpo.problem,
                           evaluator,
                           update_prior=True,
                           moo_scalarization_strategy="rAugChebyshev",
-                          log_dir="dtlz_mpi_logs-AC",
+                          log_dir="jahs_mpi_logs-AC",
                           random_state=SEED,
                           comm=comm)
 # Solve with BB_BUDGET evals
