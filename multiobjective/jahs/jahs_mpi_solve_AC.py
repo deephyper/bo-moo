@@ -11,12 +11,10 @@ if len(sys.argv) > 1:
 else:
     from datetime import datetime
     SEED = int(datetime.now().timestamp())
-FILENAME = f"dtlz_mpi_logs-AC/results_seed{SEED}.csv"
+FILENAME = f"jahs_mpi_logs-AC/results_seed{SEED}.csv"
 
 # Set default problem parameters
-BB_BUDGET = 1000 # 1K eval budget
-NDIMS = 8 # 8 vars
-NOBJS = 3 # 3 objs
+BB_BUDGET = 100 # 1K eval budget
 
 # Create MPI ranks
 comm = MPI.COMM_WORLD
@@ -56,38 +54,3 @@ search = MPIDistributedBO(hpo.problem,
                           comm=comm)
 # Solve with BB_BUDGET evals
 results = search.search(max_evals=BB_BUDGET, timeout=10800)
-
-# Gather performance stats
-if rank == 0:
-    from ast import literal_eval
-    from deephyper_benchmark.lib.dtlz.metrics import PerformanceEvaluator
-    import numpy as np
-
-    # Extract objective values from dataframe
-    obj_vals = np.asarray([literal_eval(fi)
-                           for fi in results["objective"].values])
-
-    # Initialize performance arrays
-    rmse_vals = []
-    npts_vals = []
-    hv_vals = []
-    bbf_num = []
-    # Create a performance evaluator for this problem and loop over budgets
-    perf_eval = PerformanceEvaluator()
-    for i in range(100, BB_BUDGET, 100):
-        hv_vals.append(perf_eval.hypervolume(obj_vals[:i, :]))
-        rmse_vals.append(perf_eval.rmse(obj_vals[:i, :]))
-        npts_vals.append(perf_eval.numPts(obj_vals[:i, :]))
-        bbf_num.append(i)
-    # Don't forget final budget
-    hv_vals.append(perf_eval.hypervolume(obj_vals))
-    rmse_vals.append(perf_eval.rmse(obj_vals))
-    bbf_num.append(BB_BUDGET)
-
-    # Dump results to csv file
-    import csv
-    with open(FILENAME, "w") as fp:
-        writer = csv.writer(fp)
-        writer.writerow(bbf_num)
-        writer.writerow(hv_vals)
-        writer.writerow(rmse_vals)

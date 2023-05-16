@@ -21,8 +21,9 @@ export NNODES=`wc -l < $PBS_NODEFILE`
 export NTOTRANKS=$(( $NNODES * $NRANKS_PER_NODE ))
 export OMP_NUM_THREADS=$NDEPTH
 
-export log_dir="dtlz_mpi_logs-AC"
+export log_dir="jahs_mpi_logs-AC"
 export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf"
+export PYTHONPATH=$PYTHONPATH:/home/tchang
 
 mkdir -p $log_dir
 
@@ -39,4 +40,4 @@ mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    python dtlz_mpi_solve_AC.py 1
+    python jahs_mpi_solve_AC.py 0
