@@ -12,13 +12,18 @@ BB_BUDGET = 100 # 100 eval budget
 nadir = np.asarray([100.0, 10.0])
 
 # Gather performance stats
-for PNAME in ["AC", "C", "L", "P", "Q"]:
+for PNAME in ["AC", "random", "C", "L", "P", "Q"]:
     # Read results from CSV file
-    DNAME = "dtlz_mpi_logs-" + PNAME
+    DNAME = "jahs_mpi_logs-" + PNAME
     try:
         results = pandas.read_csv(f"{DNAME}/{FILENAME}")
-        obj_vals = np.asarray([literal_eval(fi) for fi in
-                               results.sort_values("job_id")["objective"].values])
+        obj_vals0 = np.asarray([100 - np.asarray([literal_eval(fi)]).flatten()[0] for fi in
+                                results.sort_values("job_id")["objective_0"].values])
+        obj_vals1 = np.asarray([-np.asarray([literal_eval(fi)]).flatten()[-1] for fi in
+                                results.sort_values("job_id")["objective_1"].values])
+        obj_vals = np.zeros((100, 2))
+        for i in range(100):
+            obj_vals[i, :] = np.array([obj_vals0[i], obj_vals1[i]])
         # Initialize performance arrays
         hv_vals = []
         bbf_num = []
