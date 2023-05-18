@@ -14,7 +14,7 @@ else:
 FILENAME = f"jahs_mpi_logs-random/results_seed{SEED}.csv"
 
 # Set default problem parameters
-BB_BUDGET = 100 # 1K eval budget
+BB_BUDGET = 1000 # 1K eval budget
 
 # Create MPI ranks
 comm = MPI.COMM_WORLD
@@ -54,5 +54,7 @@ search = MPIDistributedBO(hpo.problem,
                           log_dir="jahs_mpi_logs-random",
                           random_state=SEED,
                           comm=comm)
+
 # Solve with BB_BUDGET evals
 results = search.search(max_evals=BB_BUDGET, timeout=10800)
+results.to_csv(f"results_seed{SEED}.csv")
