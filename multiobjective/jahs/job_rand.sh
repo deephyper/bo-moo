@@ -35,9 +35,63 @@ popd
 
 sleep 5
 
-# Run the DeepHyper script
+## Run the DeepHyper script
+#mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
+#    --depth=${NDEPTH} \
+#    --cpu-bind depth \
+#    --envall \
+#    python jahs_mpi_solve_random.py 0
+#
+#mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
+#    --depth=${NDEPTH} \
+#    --cpu-bind depth \
+#    --envall \
+#    python jahs_mpi_solve_random.py 1
+#
+#mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
+#    --depth=${NDEPTH} \
+#    --cpu-bind depth \
+#    --envall \
+#    python jahs_mpi_solve_random.py 2
+
 mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    python jahs_mpi_solve_random.py 0
+    python jahs_mpi_solve_random.py 3
+
+mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
+    --depth=${NDEPTH} \
+    --cpu-bind depth \
+    --envall \
+    python jahs_mpi_solve_random.py 4
+
+mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
+    --depth=${NDEPTH} \
+    --cpu-bind depth \
+    --envall \
+    python jahs_mpi_solve_random.py 5
+
+mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
+    --depth=${NDEPTH} \
+    --cpu-bind depth \
+    --envall \
+    python jahs_mpi_solve_random.py 6
+
+mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
+    --depth=${NDEPTH} \
+    --cpu-bind depth \
+    --envall \
+    python jahs_mpi_solve_random.py 7
+
+mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
+    --depth=${NDEPTH} \
+    --cpu-bind depth \
+    --envall \
+    python jahs_mpi_solve_random.py 8
+
+mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
+    --depth=${NDEPTH} \
+    --cpu-bind depth \
+    --envall \
+    python jahs_mpi_solve_random.py 9

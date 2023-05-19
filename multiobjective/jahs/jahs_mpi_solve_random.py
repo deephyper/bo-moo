@@ -57,4 +57,4 @@ search = MPIDistributedBO(hpo.problem,
 
 # Solve with BB_BUDGET evals
 results = search.search(max_evals=BB_BUDGET, timeout=10800)
-results.to_csv(f"results_seed{SEED}.csv")
+results.to_csv(f"jahs_mpi_logs-random/results_seed{SEED}.csv")
