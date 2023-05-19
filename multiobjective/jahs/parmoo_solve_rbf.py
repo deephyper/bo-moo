@@ -24,7 +24,7 @@ else:
     from datetime import datetime
     SEED = int(datetime.now().timestamp())
 FILENAME = f"parmoo-axy/results_seed{SEED}.csv"
-np.random.random_seed(SEED)
+np.random.seed(SEED)
 
 ### Problem dimensions ###
 num_des = 8
@@ -87,7 +87,7 @@ def sim_func(x):
 
 ### Start solving problem with RBF surrogate ###
 
-np.random.random_seed(SEED)
+np.random.seed(SEED)
 moop_rbf = MOOP(LocalGPS)
 # 2 continuous variables
 moop_rbf.addDesign({'name': "LearningRate",

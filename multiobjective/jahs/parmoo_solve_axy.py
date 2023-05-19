@@ -23,7 +23,7 @@ else:
     from datetime import datetime
     SEED = int(datetime.now().timestamp())
 FILENAME = f"parmoo-axy/results_seed{SEED}.csv"
-np.random.random_seed(SEED)
+np.random.seed(SEED)
 
 ### Problem dimensions ###
 num_des = 8
