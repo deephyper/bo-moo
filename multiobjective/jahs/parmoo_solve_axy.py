@@ -15,6 +15,16 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(levelname)-8s %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 
+# Set the random seet from CL or system clock
+import sys
+if len(sys.argv) > 1:
+    SEED = int(sys.argv[1])
+else:
+    from datetime import datetime
+    SEED = int(datetime.now().timestamp())
+FILENAME = f"parmoo-axy/results_seed{SEED}.csv"
+np.random.random_seed(SEED)
+
 ### Problem dimensions ###
 num_des = 8
 num_obj = 2
@@ -195,16 +205,17 @@ moop_axy.addObjective({'name': "latency",
                        'obj_func': single_sim_out(moop_axy.getDesignType(),
                                                   moop_axy.getSimulationType(),
                                                   ("jahs", 1))})
-# 2 acquisition functions, 1 fixed
+# q acquisition functions, 1 fixed
 weights = np.ones(2)
 weights[1] = 1.0e2
 moop_axy.addAcquisition({'acquisition': FixedWeights,
                          'hyperparams': {'weights': weights}})
-moop_axy.addAcquisition({'acquisition': RandomConstraint,
-                         'hyperparams': {}})
+for i in range(n_per_batch - 1):
+    moop_axy.addAcquisition({'acquisition': RandomConstraint,
+                             'hyperparams': {}})
 # Solve and dump to csv
 moop_axy.solve(iters_limit)
 results_axy = moop_axy.getObjectiveData(format='pandas')
-results_axy.to_csv("parmoo-axy/results.csv")
+results_axy.to_csv(FILENAME)
 
 

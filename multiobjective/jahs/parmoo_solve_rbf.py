@@ -16,6 +16,16 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(levelname)-8s %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 
+# Set the random seet from CL or system clock
+import sys
+if len(sys.argv) > 1:
+    SEED = int(sys.argv[1])
+else:
+    from datetime import datetime
+    SEED = int(datetime.now().timestamp())
+FILENAME = f"parmoo-axy/results_seed{SEED}.csv"
+np.random.random_seed(SEED)
+
 ### Problem dimensions ###
 num_des = 8
 num_obj = 2
@@ -77,6 +87,7 @@ def sim_func(x):
 
 ### Start solving problem with RBF surrogate ###
 
+np.random.random_seed(SEED)
 moop_rbf = MOOP(LocalGPS)
 # 2 continuous variables
 moop_rbf.addDesign({'name': "LearningRate",
@@ -113,17 +124,18 @@ moop_rbf.addObjective({'name': "latency",
                        'obj_func': single_sim_out(moop_rbf.getDesignType(),
                                                   moop_rbf.getSimulationType(),
                                                   ("jahs", 1))})
-# 2 acquisition functions, 1 fixed
+# q acquisition functions, 1 fixed
 weights = np.ones(2)
 weights[1] = 1.0e2
 moop_rbf.addAcquisition({'acquisition': FixedWeights,
                          'hyperparams': {'weights': weights}})
-moop_rbf.addAcquisition({'acquisition': RandomConstraint,
-                         'hyperparams': {}})
+for i in range(n_per_batch):
+    moop_rbf.addAcquisition({'acquisition': RandomConstraint,
+                             'hyperparams': {}})
 # Solve and dump to csv
 moop_rbf.solve(iters_limit)
 results_rbf = moop_rbf.getObjectiveData(format='pandas')
-results_rbf.to_csv("parmoo-rbf/results.csv")
+results_rbf.to_csv(f"parmoo-rbf/results_seed{SEED}.csv")
 
 
 ### Start solving problem with TR iterations ###
@@ -166,17 +178,18 @@ moop_tr.addObjective({'name': "latency",
                       'obj_func': single_sim_out(moop_rbf.getDesignType(),
                                                  moop_rbf.getSimulationType(),
                                                  ("jahs", 1))})
-# 2 acquisition functions, 1 fixed
+# 1 acquisition functions, 1 fixed
 weights = np.ones(2)
 weights[1] = 1.0e3
 moop_tr.addAcquisition({'acquisition': FixedWeights,
                         'hyperparams': {'weights': weights}})
-moop_tr.addAcquisition({'acquisition': RandomConstraint,
-                        'hyperparams': {}})
+for i in range(n_per_batch):
+    moop_tr.addAcquisition({'acquisition': RandomConstraint,
+                            'hyperparams': {}})
 # Solve and dump to csv
 moop_tr.solve(iters_limit)
 results_rbf = moop_tr.getObjectiveData(format='pandas')
-results_rbf.to_csv("parmoo-tr/results.csv")
+results_rbf.to_csv(f"parmoo-tr/results_seed{SEED}.csv")
 
 
 
