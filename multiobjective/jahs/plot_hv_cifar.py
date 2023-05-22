@@ -16,7 +16,7 @@ for PNAME in ["AC", "random", "C", "L", "P", "Q"]:
     hv_all = []
     bbf_all = []
     # Read results from CSV file
-    DNAME = "jahs_mpi_logs-" + PNAME
+    DNAME = "jahs_mpi_logs-" + PNAME + "-cifar"
     for SEED in range(10):
         FNAME = FILENAME.replace("SEED", str(SEED))
         try:
@@ -48,7 +48,7 @@ for PNAME in ["AC", "random", "C", "L", "P", "Q"]:
                  label=f"deephyper-{PNAME}")
 
 # And add pymoo to plot
-DNAME = "pymoo"
+DNAME = "pymoo-cifar"
 hv_all = []
 bbf_all = []
 for SEED in range(10):
@@ -75,7 +75,7 @@ if len(bbf_all) > 0:
              label=f"pymoo/NSGA-II")
 
 # And add parmoo + axy to plot
-DNAME = "parmoo-axy"
+DNAME = "parmoo-axy-cifar"
 hv_all = []
 bbf_all = []
 for SEED in range(10):
@@ -103,7 +103,7 @@ if len(bbf_all) > 0:
              label=f"parmoo-AXY")
 
 # And add parmoo + rbf to plot
-DNAME = "parmoo-rbf"
+DNAME = "parmoo-rbf-cifar"
 hv_all = []
 bbf_all = []
 for SEED in range(10):
@@ -131,7 +131,7 @@ if len(bbf_all) > 0:
              label=f"parmoo-RBF")
 
 # And add parmoo + tr to plot
-DNAME = "parmoo-tr"
+DNAME = "parmoo-tr-cifar"
 hv_all = []
 bbf_all = []
 for SEED in range(10):
