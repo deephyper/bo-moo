@@ -16,8 +16,8 @@ class JahsBench(ElementwiseProblem):
         variables = {
             "LearningRate": Real(bounds=(1.0e-3, 1.0)),
             "WeightDecay": Real(bounds=(1.0e-5, 1.0e-3)),
-            "Activation": Choice(options=["ReLU", "Hardswish", "Mish"]),
-            "TrivialAugment": Choice(options=["on", "off"]),
+            "Activation": Choice(options=["ReLU", "Hard", "Mish"]),
+            "TrivialAugment": Binary(),
             "Op1": Integer(bounds=(0, 4)),
             "Op2": Integer(bounds=(0, 4)),
             "Op3": Integer(bounds=(0, 4)),
@@ -64,11 +64,9 @@ class JahsBench(ElementwiseProblem):
         # Update config using X
         for key in X.keys():
             config[key] = X[key]
-        # Special rule for setting "TrivialAugment"
-        if X['TrivialAugment'] == "on":
-            config['TrivialAugment'] = True
-        else:
-            config['TrivialAugment'] = False
+        # Pymoo truncates Hardswish to Hard
+        if config['Activation'] == "Hard":
+            config['Activation'] = "Hardswish"
         # Evaluate and return
         result = self.benchmark(config, nepochs=self.NEPOCHS)
         sx.append(100 - result[self.NEPOCHS]['valid-acc'])
