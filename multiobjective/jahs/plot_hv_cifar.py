@@ -57,15 +57,15 @@ for SEED in range(10):
     bbf_num = []
     obj_vals = []
     try:
-        with open(f"{DNAME}/{FILENAME}", "r") as fp:
+        with open(f"{DNAME}/{FNAME}", "r") as fp:
             reader = csv.reader(fp)
             for i, row in enumerate(reader):
-                for fi in row:
-                    obj_vals.append([float(fij) for fij in fi.strip()[1:-1].split()])
-                hv_vals.append(hypervolume(pareto_front(np.asarray(obj_vals)), nadir))
-                bbf_num.append((i+1)*10)
-        hv_all.append(hv_vals)
-        bbf_all.append(bbf_num)
+                obj_vals.append([float(fi) for fi in row])
+                if i % 10 == 0:
+                    hv_vals.append(hypervolume(pareto_front(np.asarray(obj_vals)), nadir))
+                    bbf_num.append(i)
+            hv_all.append(hv_vals)
+            bbf_all.append(bbf_num)
     except FileNotFoundError:
         print(f"skipping pymoo/NSGA-II seed {SEED}")
 if len(bbf_all) > 0:
