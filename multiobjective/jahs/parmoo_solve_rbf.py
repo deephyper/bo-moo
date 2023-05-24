@@ -23,7 +23,7 @@ if len(sys.argv) > 1:
 else:
     from datetime import datetime
     SEED = int(datetime.now().timestamp())
-FILENAME = f"parmoo-axy/results_seed{SEED}.csv"
+FILENAME = f"parmoo-rbf-cifar/results_seed{SEED}.csv"
 np.random.seed(SEED)
 
 ### Problem dimensions ###
@@ -129,19 +129,20 @@ weights = np.ones(2)
 weights[1] = 1.0e2
 moop_rbf.addAcquisition({'acquisition': FixedWeights,
                          'hyperparams': {'weights': weights}})
-for i in range(n_per_batch):
+for i in range(n_per_batch-1):
     moop_rbf.addAcquisition({'acquisition': RandomConstraint,
                              'hyperparams': {}})
 # Solve and dump to csv
 moop_rbf.solve(iters_limit)
 results_rbf = moop_rbf.getObjectiveData(format='pandas')
-results_rbf.to_csv(f"parmoo-rbf/results_seed{SEED}.csv")
+results_rbf.to_csv(FILENAME)
 
 
 ### Start solving problem with TR iterations ###
 from parmoo.optimizers import TR_LBFGSB
 from parmoo.surrogates import LocalGaussRBF
 
+FILENAME = f"parmoo-tr-cifar/results_seed{SEED}.csv"
 moop_tr = MOOP(TR_LBFGSB)
 # 2 continuous variables
 moop_tr.addDesign({'name': "LearningRate",
@@ -183,13 +184,13 @@ weights = np.ones(2)
 weights[1] = 1.0e3
 moop_tr.addAcquisition({'acquisition': FixedWeights,
                         'hyperparams': {'weights': weights}})
-for i in range(n_per_batch):
+for i in range(n_per_batch-1):
     moop_tr.addAcquisition({'acquisition': RandomConstraint,
                             'hyperparams': {}})
 # Solve and dump to csv
 moop_tr.solve(iters_limit)
 results_rbf = moop_tr.getObjectiveData(format='pandas')
-results_rbf.to_csv(f"parmoo-tr/results_seed{SEED}.csv")
+results_rbf.to_csv(FILENAME)
 
 
 
