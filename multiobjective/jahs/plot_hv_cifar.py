@@ -31,12 +31,9 @@ for PNAME in ["AC", "random", "C", "L", "P", "Q"]:
             # Initialize performance arrays
             hv_vals = []
             bbf_num = []
-            for i in range(10, BB_BUDGET, 10):
+            for i in range(10, BB_BUDGET+1, 10):
                 hv_vals.append(hypervolume(pareto_front(obj_vals[:i, :]), nadir))
                 bbf_num.append(i)
-            # Don't forget final budget
-            hv_vals.append(hypervolume(pareto_front(obj_vals), nadir))
-            bbf_num.append(BB_BUDGET)
             hv_all.append(hv_vals)
             bbf_all.append(bbf_num)
         except FileNotFoundError:
@@ -61,9 +58,16 @@ for SEED in range(10):
             reader = csv.reader(fp)
             for i, row in enumerate(reader):
                 obj_vals.append([float(fi) for fi in row])
-                if i % 10 == 0:
+                if (i+1) % 10 == 0:
                     hv_vals.append(hypervolume(pareto_front(np.asarray(obj_vals)), nadir))
-                    bbf_num.append(i)
+                    bbf_num.append(i+1)
+            if len(obj_vals) % 10 != 0:
+                hv_vals.append(hypervolume(pareto_front(np.asarray(obj_vals)), nadir))
+                bbf_num.append((len(obj_vals)+9)//10 * 10)
+            start = bbf_num[-1]
+            for i in range(start, 1001, 10):
+                hv_vals.append(hv_vals[-1])
+                bbf_num.append(i)
             hv_all.append(hv_vals)
             bbf_all.append(bbf_num)
     except FileNotFoundError:

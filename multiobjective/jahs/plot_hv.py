@@ -62,8 +62,15 @@ for SEED in range(10):
             for i, row in enumerate(reader):
                 for fi in row:
                     obj_vals.append([float(fij) for fij in fi.strip()[1:-1].split()])
-                hv_vals.append(hypervolume(pareto_front(np.asarray(obj_vals)), nadir))
-                bbf_num.append((i+1)*10)
+                if i % 10 == 0:
+                    hv_vals.append(hypervolume(pareto_front(np.asarray(obj_vals)), nadir))
+                    bbf_num.append(i+1)
+            for i in range(len(hv_vals), 1000):
+                if i % 10 == 0:
+                    hv_vals.append(hv_vals[-1])
+                    bbf_num.append(i+1)
+            hv_vals.append(hypervolume(pareto_front(np.asarray(obj_vals)), nadir))
+            bbf_num.append(1000)
         hv_all.append(hv_vals)
         bbf_all.append(bbf_num)
     except FileNotFoundError:
