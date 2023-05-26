@@ -30,9 +30,9 @@ num_des = 8
 num_obj = 2
 
 ### Budget variables ###
-n_search_sz = 200 # 100 pt initial DOE
-n_per_batch = 16  # batch size = 16
-iters_limit = 50  # run for 50 iterations
+n_search_sz = 50 # 50 pt initial DOE
+n_per_batch = 16 # batch size = 16
+iters_limit = 55 # run for 55 iterations
 
 ### JAHS bench settings ###
 DATASET = "cifar10"

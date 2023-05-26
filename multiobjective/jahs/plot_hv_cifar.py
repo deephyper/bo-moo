@@ -91,9 +91,9 @@ for SEED in range(10):
         with open(f"{DNAME}/{FNAME}", "r") as fp:
             reader = csv.reader(fp)
             for i, row in enumerate(reader):
-                if i > 0:
+                if i > 0 and i <= 1000:
                     obj_vals.append([float(fi) for fi in row[-2:]])
-                if i > 10 and (i - 1) % 10 == 0:
+                if i > 0 and i <= 1000 and i % 10 == 0:
                     hv_vals.append(hypervolume(pareto_front(np.asarray(obj_vals)), nadir))
                     bbf_num.append(len(obj_vals))
         hv_all.append(hv_vals)
