@@ -107,7 +107,7 @@ if len(bbf_all) > 0:
              label=f"parmoo-AXY")
 
 # And add parmoo + rbf to plot
-DNAME = "parmoo-rbf-cifar"
+DNAME = "parmoo-rbf-cifar-X"
 hv_all = []
 bbf_all = []
 for SEED in range(10):
@@ -135,7 +135,7 @@ if len(bbf_all) > 0:
              label=f"parmoo-RBF")
 
 # And add parmoo + tr to plot
-DNAME = "parmoo-tr-cifar"
+DNAME = "parmoo-tr-cifar-X"
 hv_all = []
 bbf_all = []
 for SEED in range(10):
