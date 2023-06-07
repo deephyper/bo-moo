@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l select=2:system=polaris
+#PBS -l select=25:system=polaris
 #PBS -l place=scatter
 #PBS -l walltime=01:00:00
 #PBS -q debug 
@@ -23,43 +23,43 @@ export OMP_NUM_THREADS=$NDEPTH
 export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf"
 
 # Set the seed
-export seed=9
+export seed=0
 
-## Run DeepHyper AC
-## Setup Redis Database
-#export log_dir="dtlz_mpi_logs-AC"
-#mkdir -p $log_dir
-#pushd $log_dir
-#redis-server $REDIS_CONF &
-#export DEEPHYPER_DB_HOST=$HOST
-#popd
-#sleep 5
-## Run the DeepHyper script
-#mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
-#    --depth=${NDEPTH} \
-#    --cpu-bind depth \
-#    --envall \
-#    python dtlz_mpi_solve_AC.py $seed
-## Stop the redis server
-#redis-cli shutdown
-#
-## Run DeepHyper C
-## Setup Redis Database
-#export log_dir="dtlz_mpi_logs-C"
-#mkdir -p $log_dir
-#pushd $log_dir
-#redis-server $REDIS_CONF &
-#export DEEPHYPER_DB_HOST=$HOST
-#popd
-#sleep 5
-## Run the DeepHyper script
-#mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
-#    --depth=${NDEPTH} \
-#    --cpu-bind depth \
-#    --envall \
-#    python dtlz_mpi_solve_C.py $seed
-## Stop the redis server
-#redis-cli shutdown
+# Run DeepHyper AC
+# Setup Redis Database
+export log_dir="dtlz_mpi_logs-AC"
+mkdir -p $log_dir
+pushd $log_dir
+redis-server $REDIS_CONF &
+export DEEPHYPER_DB_HOST=$HOST
+popd
+sleep 5
+# Run the DeepHyper script
+mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
+    --depth=${NDEPTH} \
+    --cpu-bind depth \
+    --envall \
+    python dtlz_mpi_solve_AC.py $seed
+# Stop the redis server
+redis-cli shutdown
+
+# Run DeepHyper C
+# Setup Redis Database
+export log_dir="dtlz_mpi_logs-C"
+mkdir -p $log_dir
+pushd $log_dir
+redis-server $REDIS_CONF &
+export DEEPHYPER_DB_HOST=$HOST
+popd
+sleep 5
+# Run the DeepHyper script
+mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
+    --depth=${NDEPTH} \
+    --cpu-bind depth \
+    --envall \
+    python dtlz_mpi_solve_C.py $seed
+# Stop the redis server
+redis-cli shutdown
 
 # Run DeepHyper L
 # Setup Redis Database
