@@ -14,7 +14,7 @@ else:
 FILENAME = f"jahs_mpi_logs-AC/results_seed{SEED}.csv"
 
 # Set default problem parameters
-BB_BUDGET = 1000 # 1K eval budget
+BB_BUDGET = 2000 # 2K eval budget
 
 # Create MPI ranks
 comm = MPI.COMM_WORLD
