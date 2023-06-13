@@ -1,9 +1,9 @@
 #!/bin/bash
-#PBS -l select=2:system=polaris
+#PBS -l select=25:system=polaris
 #PBS -l place=scatter
 #PBS -l walltime=01:00:00
-#PBS -q debug 
-# #PBF -q prod
+# #PBS -q debug 
+#PBF -q prod
 #PBS -A datascience
 #PBS -l filesystems=grand:home
 
@@ -33,7 +33,7 @@ redis-server $REDIS_CONF &
 export DEEPHYPER_DB_HOST=$HOST
 popd
 
-sleep 5
+sleep 10
 
 # Run the DeepHyper script
 mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
