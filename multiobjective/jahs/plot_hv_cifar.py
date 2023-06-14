@@ -96,6 +96,10 @@ for SEED in range(10):
                 if i > 0 and i <= 1000 and i % 10 == 0:
                     hv_vals.append(hypervolume(pareto_front(np.asarray(obj_vals)), nadir))
                     bbf_num.append(len(obj_vals))
+        while len(hv_vals) < 100:
+            hv_vals.append(hv_vals[-1])
+        while len(bbf_num) < 100:
+            bbf_num.append(bbf_num[-1])
         hv_all.append(hv_vals)
         bbf_all.append(bbf_num)
     except FileNotFoundError:
