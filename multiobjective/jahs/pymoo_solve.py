@@ -73,7 +73,7 @@ class JahsBench(ElementwiseProblem):
         sx.append(result[self.NEPOCHS]['latency'])
         out["F"] = sx.copy()
         self.count += 1
-        print(f"finished evaluation {self.count}")
+        print(f"finished evaluation {self.count}: {sx}")
 
 
 # Set the random seed from CL or system clock

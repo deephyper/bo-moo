@@ -48,5 +48,6 @@ plt.xlabel("Number of blackbox function evaluations")
 plt.ylabel("RMSE of Pareto optimal points")
 plt.legend(loc="upper right")
 plt.tight_layout()
-plt.show()
+#plt.show()
+plt.savefig("dtlz1_rmse.png")
 
