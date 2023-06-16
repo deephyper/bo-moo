@@ -74,6 +74,15 @@ class JahsBench(ElementwiseProblem):
         out["F"] = sx.copy()
         self.count += 1
         print(f"finished evaluation {self.count}: {sx}")
+        # Dump results to csv file
+        if self.count == 1:
+            with open(FILENAME, "w") as fp:
+                writer = csv.writer(fp)
+                writer.writerow(sx)
+        else:
+            with open(FILENAME, "a") as fp:
+                writer = csv.writer(fp)
+                writer.writerow(sx)
 
 
 # Set the random seed from CL or system clock
@@ -98,16 +107,16 @@ res = minimize(JahsBench(),
                save_history=True,
                seed=SEED,
                verbose=False)
-
-# Extract all objective values
-obj_vals = []
-for row in res.history:
-    for fi in row.result().F:
-        obj_vals.append(fi)
-obj_vals = np.asarray(obj_vals)
-
-# Dump results to csv file
-with open(FILENAME, "w") as fp:
-    writer = csv.writer(fp)
-    for row in obj_vals:
-        writer.writerow(row)
+#
+## Extract all objective values
+#obj_vals = []
+#for row in res.history:
+#    for fi in row.result().F:
+#        obj_vals.append(fi)
+#obj_vals = np.asarray(obj_vals)
+#
+## Dump results to csv file
+#with open(FILENAME, "w") as fp:
+#    writer = csv.writer(fp)
+#    for row in obj_vals:
+#        writer.writerow(row)
