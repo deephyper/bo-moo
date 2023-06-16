@@ -82,13 +82,11 @@ results = search.search(max_evals=BB_BUDGET, timeout=10800)
 
 # Gather performance stats
 if rank == 0:
-    from ast import literal_eval
     from deephyper_benchmark.lib.dtlz.metrics import PerformanceEvaluator
     import numpy as np
 
     # Extract objective values from dataframe
-    obj_vals = np.asarray([literal_eval(fi)
-                           for fi in results["objective"].values])
+    obj_vals = np.asarray([results["objective_0"].values, results["objective_1"].values, results["objective_2"].values]).T
 
     # Initialize performance arrays
     rmse_vals = []
