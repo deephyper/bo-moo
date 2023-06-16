@@ -214,7 +214,7 @@ for i in range(n_per_batch - 1):
     moop_axy.addAcquisition({'acquisition': RandomConstraint,
                              'hyperparams': {}})
 # Solve and dump to csv
-moop_axy.solve(iters_limit)
+moop_axy.solve(iters_limit+1)
 results_axy = moop_axy.getObjectiveData(format='pandas')
 results_axy.to_csv(FILENAME)
 
