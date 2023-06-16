@@ -2,8 +2,21 @@ import logging
 import os
 import sys
 
+import mpi4py
+
+mpi4py.rc.initialize = False
+mpi4py.rc.threads = True
+mpi4py.rc.thread_level = "multiple"
+
 from mpi4py import MPI
 from deephyper.search.hps import MPIDistributedBO
+
+if not MPI.Is_initialized():
+    MPI.Init_thread()
+
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+size = comm.Get_size()
 
 # Set the random seed from CL or system clock
 if len(sys.argv) > 1:
