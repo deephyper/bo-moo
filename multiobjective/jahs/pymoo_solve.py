@@ -95,7 +95,7 @@ FILENAME = f"pymoo-cifar/results_seed{SEED}.csv"
 
 
 # Solve DTLZ2 problem w/ NSGA-II (pop size 100) in pymoo
-algorithm = NSGA2(pop_size=20,
+algorithm = NSGA2(pop_size=40,
                   sampling=MixedVariableSampling(),
                   mating=MixedVariableMating(eliminate_duplicates=MixedVariableDuplicateElimination()),
                   eliminate_duplicates=MixedVariableDuplicateElimination(),
@@ -103,7 +103,7 @@ algorithm = NSGA2(pop_size=20,
                   )
 res = minimize(JahsBench(),
                algorithm,
-               ("n_gen", 50),
+               ("n_gen", 25),
                save_history=True,
                seed=SEED,
                verbose=False)
