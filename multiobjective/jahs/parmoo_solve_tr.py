@@ -91,10 +91,10 @@ moop_tr = MOOP(TR_LBFGSB)
 # 2 continuous variables
 moop_tr.addDesign({'name': "LearningRate",
                     'des_type': "continuous",
-                    'lb': 1.0e-3, 'ub': 1.0})
+                    'lb': 1.0e-3, 'ub': 1.0, 'des_tol': 1.0e-3})
 moop_tr.addDesign({'name': "WeightDecay",
                     'des_type': "continuous",
-                    'lb': 1.0e-5, 'ub': 1.0e-3})
+                    'lb': 1.0e-5, 'ub': 1.0e-3, 'des_tol': 1.0e-5})
 # 2 categorical variables
 moop_tr.addDesign({'name': "Activation",
                     'des_type': "categorical",
