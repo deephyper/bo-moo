@@ -1,7 +1,7 @@
 
 import numpy as np
 import pandas as pd
-from parmoo import MOOP
+from parmoo.extras.libe import MOOP
 from parmoo.searches import LatinHypercube
 from parmoo.acquisitions import RandomConstraint, FixedWeights
 from parmoo.surrogates import LocalGaussRBF
@@ -32,8 +32,8 @@ num_obj = 2
 
 ### Budget variables ###
 n_search_sz = 200 # 200 pt initial DOE
-n_per_batch = 16 # batch size = 16
-iters_limit = 50 # run for 50 iterations
+n_per_batch = 40 # batch size = 40
+iters_limit = 20 # run for 20 iterations
 
 ### JAHS bench settings ###
 DATASET = "cifar10"
@@ -91,10 +91,10 @@ moop_tr = MOOP(TR_LBFGSB)
 # 2 continuous variables
 moop_tr.addDesign({'name': "LearningRate",
                     'des_type': "continuous",
-                    'lb': 1.0e-3, 'ub': 1.0})
+                    'lb': 1.0e-3, 'ub': 1.0, 'des_tol': 1.0e-3})
 moop_tr.addDesign({'name': "WeightDecay",
                     'des_type': "continuous",
-                    'lb': 1.0e-5, 'ub': 1.0e-3})
+                    'lb': 1.0e-5, 'ub': 1.0e-3, 'des_tol': 1.0e-5})
 # 2 categorical variables
 moop_tr.addDesign({'name': "Activation",
                     'des_type': "categorical",
@@ -127,13 +127,13 @@ moop_tr.addObjective({'name': "latency",
 weights = np.ones(2)
 weights[1] = 1.0e2
 moop_tr.addAcquisition({'acquisition': FixedWeights,
-                         'hyperparams': {'weights': weights}})
-for i in range(n_per_batch - 1):
+                        'hyperparams': {'weights': weights}})
+for i in range(n_per_batch-1):
     moop_tr.addAcquisition({'acquisition': RandomConstraint,
-                             'hyperparams': {}})
+                            'hyperparams': {}})
 # Solve and dump to csv
-moop_tr.solve(iters_limit+1)
-results_tr = moop_tr.getObjectiveData(format='pandas')
-results_tr.to_csv(FILENAME)
+moop_tr.solve(iters_limit)
+results_tr = moop_tr.getObjectiveData()
+pd.DataFrame(results_tr).to_csv(FILENAME)
 
 

@@ -12,7 +12,7 @@ BB_BUDGET = 1000 # 100 eval budget
 nadir = np.asarray([100.0, 10.0])
 
 # Gather performance stats
-for PNAME in ["AC10", "AC20", "AC40", "random", "C", "L", "P", "Q"]:
+for PNAME in ["AC40", "random", "C", "L", "P", "Q"]:
     hv_all = []
     bbf_all = []
     # Read results from CSV file
@@ -44,9 +44,24 @@ for PNAME in ["AC10", "AC20", "AC40", "random", "C", "L", "P", "Q"]:
             print(f"skipping {DNAME}/{FNAME}")
     if len(bbf_all) > 0:
         # Add to plot
-        plt.plot(np.asarray(bbf_all).mean(axis=0),
-                 np.asarray(hv_all).mean(axis=0), "-",
-                 label=f"deephyper-{PNAME}")
+        bbf_means = np.asarray(bbf_all).mean(axis=0)
+        hv_means = np.asarray(hv_all).mean(axis=0)
+        hv_se = np.zeros(hv_means.shape)
+        for row in hv_all:
+            hv_se += (np.asarray(row) - hv_means) ** 2
+        hv_se = np.sqrt(hv_se / 9)
+        hv_se = hv_se / np.sqrt(10)
+        # Add to plot
+        if PNAME == "AC40":
+            plt.plot(bbf_means, hv_means, "-", color="g",
+                     label=f"DeepHyper AugCheb")
+            plt.fill_between(bbf_means, hv_means - hv_se, hv_means + hv_se,
+                             color="g", alpha=0.2)
+        else:
+            plt.plot(bbf_means, hv_means, "-", color="orange",
+                     label=f"uniform sampling")
+            plt.fill_between(bbf_means, hv_means - hv_se, hv_means + hv_se,
+                             color="orange", alpha=0.2)
 
 # And add pymoo to plot
 DNAME = "pymoo-cifar"
@@ -79,12 +94,21 @@ for SEED in range(10):
         print(f"skipping pymoo/NSGA-II seed {SEED}")
 if len(bbf_all) > 0:
     # Add to plot
-    plt.plot(np.asarray(bbf_all).mean(axis=0),
-             np.asarray(hv_all).mean(axis=0), "-",
-             label=f"pymoo/NSGA-II")
+    bbf_means = np.asarray(bbf_all).mean(axis=0)
+    hv_means = np.asarray(hv_all).mean(axis=0)
+    hv_se = np.zeros(hv_means.shape)
+    for row in hv_all:
+        hv_se += (np.asarray(row) - hv_means) ** 2
+    hv_se = np.sqrt(hv_se / 9)
+    hv_se = hv_se / np.sqrt(10)
+    # Add to plot
+    plt.plot(bbf_means, hv_means, "-", color="b",
+             label=f"pymoo NSGA-II")
+    plt.fill_between(bbf_means, hv_means - hv_se, hv_means + hv_se,
+                     color="b", alpha=0.2)
 
 # And add parmoo + axy to plot
-DNAME = "parmoo-axy-cifar"
+DNAME = "parmoo-tr-cifar"
 hv_all = []
 bbf_all = []
 for SEED in range(10):
@@ -108,68 +132,20 @@ for SEED in range(10):
         hv_all.append(hv_vals)
         bbf_all.append(bbf_num)
     except FileNotFoundError:
-        print(f"skipping parmoo-axy seed {SEED}")
-if len(bbf_all) > 0:
-    # Add to plot
-    plt.plot(np.asarray(bbf_all).mean(axis=0),
-             np.asarray(hv_all).mean(axis=0), "-",
-             label=f"parmoo-AXY")
-
-# And add parmoo + rbf to plot
-DNAME = "parmoo-rbf-cifar-X"
-hv_all = []
-bbf_all = []
-for SEED in range(10):
-    FNAME = FILENAME.replace("SEED", str(SEED))
-    hv_vals = []
-    bbf_num = []
-    obj_vals = []
-    try:
-        with open(f"{DNAME}/{FNAME}", "r") as fp:
-            reader = csv.reader(fp)
-            for i, row in enumerate(reader):
-                if i > 0:
-                    obj_vals.append([float(fi) for fi in row[-2:]])
-                if i > 10 and (i - 1) % 10 == 0:
-                    hv_vals.append(hypervolume(pareto_front(np.asarray(obj_vals)), nadir))
-                    bbf_num.append(len(obj_vals))
-        hv_all.append(hv_vals)
-        bbf_all.append(bbf_num)
-    except FileNotFoundError:
-        print(f"skipping parmoo-rbf seed {SEED}")
-if len(bbf_all) > 0:
-    # Add to plot
-    plt.plot(np.asarray(bbf_all).mean(axis=0),
-             np.asarray(hv_all).mean(axis=0), "-",
-             label=f"parmoo-RBF")
-
-# And add parmoo + tr to plot
-DNAME = "parmoo-tr-cifar-X"
-hv_all = []
-bbf_all = []
-for SEED in range(10):
-    FNAME = FILENAME.replace("SEED", str(SEED))
-    hv_vals = []
-    bbf_num = []
-    obj_vals = []
-    try:
-        with open(f"{DNAME}/{FNAME}", "r") as fp:
-            reader = csv.reader(fp)
-            for i, row in enumerate(reader):
-                if i > 0:
-                    obj_vals.append([float(fi) for fi in row[-2:]])
-                if i > 10 and (i - 1) % 10 == 0:
-                    hv_vals.append(hypervolume(pareto_front(np.asarray(obj_vals)), nadir))
-                    bbf_num.append(len(obj_vals))
-            hv_all.append(hv_vals)
-            bbf_all.append(bbf_num)
-    except FileNotFoundError:
         print(f"skipping parmoo-tr seed {SEED}")
 if len(bbf_all) > 0:
+    bbf_means = np.asarray(bbf_all).mean(axis=0)
+    hv_means = np.asarray(hv_all).mean(axis=0)
+    hv_se = np.zeros(hv_means.shape)
+    for row in hv_all:
+        hv_se += (np.asarray(row) - hv_means) ** 2
+    hv_se = np.sqrt(hv_se / 9)
+    hv_se = hv_se / np.sqrt(10)
     # Add to plot
-    plt.plot(np.asarray(bbf_all).mean(axis=0),
-             np.asarray(hv_all).mean(axis=0),
-             label=f"parmoo-TR")
+    plt.plot(bbf_means, hv_means, "-", color="r",
+             label=f"ParMOO TR solver")
+    plt.fill_between(bbf_means, hv_means - hv_se, hv_means + hv_se,
+                     color="r", alpha=0.2)
 
 # Add legends and show
 plt.xlabel("Number of blackbox function evaluations")
