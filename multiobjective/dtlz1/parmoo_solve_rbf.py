@@ -102,60 +102,60 @@ with open(FILENAME, "w") as fp:
     writer.writerow(rmse_vals)
 
 
-### Start solving problem with TR iterations ###
-from parmoo.optimizers import TR_LBFGSB
-from parmoo.surrogates import LocalGaussRBF
-
-np.random.seed(SEED)
-
-moop_tr = MOOP(TR_LBFGSB)
-
-for i in range(num_des):
-    moop_tr.addDesign({'name': f"x{i+1}",
-                       'des_type': "continuous",
-                       'lb': 0.0, 'ub': 1.0})
-
-moop_tr.addSimulation({'name': "DTLZ_out",
-                       'm': num_obj,
-                       'sim_func': sim_func(moop_tr.getDesignType(),
-                                            num_obj=num_obj, offset=0.5),
-                       'search': LatinHypercube,
-                       'surrogate': LocalGaussRBF,
-                       'hyperparams': {'search_budget': n_search_sz}})
-
-for i in range(num_obj):
-    moop_tr.addObjective({'name': f"f{i+1}",
-                          'obj_func': single_sim_out(moop_tr.getDesignType(),
-                                                     moop_tr.getSimulationType(),
-                                                     ("DTLZ_out", i))})
-
-for i in range(n_per_batch):
-   moop_tr.addAcquisition({'acquisition': RandomConstraint,
-                           'hyperparams': {}})
-
-# Solve and dump to csv
-moop_tr.solve(iters_limit)
-results_tr = moop_tr.getObjectiveData(format='pandas')
-FILENAME = f"parmoo-tr/results_seed{SEED}.csv"
-
-
-# Collect performance stats
-obj_vals = []
-hv_vals = []
-rmse_vals = []
-bbf_num = []
-perf_eval = PerformanceEvaluator()
-for i, row in results_tr.iterrows():
-    obj_vals.append([row['f1'], row['f2'], row['f3']])
-    if (i+1) > 99 and (i+1) % 100 == 0:
-        bbf_num.append(len(obj_vals))
-        rmse_vals.append(perf_eval.rmse(np.asarray(obj_vals)))
-        hv_vals.append(perf_eval.hypervolume(np.asarray(obj_vals)))
-
-# Dump results to csv file
-import csv
-with open(FILENAME, "w") as fp:
-    writer = csv.writer(fp)
-    writer.writerow(bbf_num)
-    writer.writerow(hv_vals)
-    writer.writerow(rmse_vals)
+#### Start solving problem with TR iterations ###
+#from parmoo.optimizers import TR_LBFGSB
+#from parmoo.surrogates import LocalGaussRBF
+#
+#np.random.seed(SEED)
+#
+#moop_tr = MOOP(TR_LBFGSB)
+#
+#for i in range(num_des):
+#    moop_tr.addDesign({'name': f"x{i+1}",
+#                       'des_type': "continuous",
+#                       'lb': 0.0, 'ub': 1.0})
+#
+#moop_tr.addSimulation({'name': "DTLZ_out",
+#                       'm': num_obj,
+#                       'sim_func': sim_func(moop_tr.getDesignType(),
+#                                            num_obj=num_obj, offset=0.5),
+#                       'search': LatinHypercube,
+#                       'surrogate': LocalGaussRBF,
+#                       'hyperparams': {'search_budget': n_search_sz}})
+#
+#for i in range(num_obj):
+#    moop_tr.addObjective({'name': f"f{i+1}",
+#                          'obj_func': single_sim_out(moop_tr.getDesignType(),
+#                                                     moop_tr.getSimulationType(),
+#                                                     ("DTLZ_out", i))})
+#
+#for i in range(n_per_batch):
+#   moop_tr.addAcquisition({'acquisition': RandomConstraint,
+#                           'hyperparams': {}})
+#
+## Solve and dump to csv
+#moop_tr.solve(iters_limit)
+#results_tr = moop_tr.getObjectiveData(format='pandas')
+#FILENAME = f"parmoo-tr/results_seed{SEED}.csv"
+#
+#
+## Collect performance stats
+#obj_vals = []
+#hv_vals = []
+#rmse_vals = []
+#bbf_num = []
+#perf_eval = PerformanceEvaluator()
+#for i, row in results_tr.iterrows():
+#    obj_vals.append([row['f1'], row['f2'], row['f3']])
+#    if (i+1) > 99 and (i+1) % 100 == 0:
+#        bbf_num.append(len(obj_vals))
+#        rmse_vals.append(perf_eval.rmse(np.asarray(obj_vals)))
+#        hv_vals.append(perf_eval.hypervolume(np.asarray(obj_vals)))
+#
+## Dump results to csv file
+#import csv
+#with open(FILENAME, "w") as fp:
+#    writer = csv.writer(fp)
+#    writer.writerow(bbf_num)
+#    writer.writerow(hv_vals)
+#    writer.writerow(rmse_vals)

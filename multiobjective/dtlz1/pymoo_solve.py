@@ -32,22 +32,15 @@ import deephyper_benchmark as dhb
 dhb.load("DTLZ")
 from deephyper_benchmark.lib.dtlz.metrics import PerformanceEvaluator
 
-# Solve DTLZ2 problem w/ NSGA-II (pop size 100) in pymoo
+# Solve DTLZ2 problem w/ NSGA-II (pop size 80) in pymoo
 problem = get_problem(f"dtlz{PROB_NUM}", n_var=NDIMS, n_obj=NOBJS)
-algorithm = NSGA2(pop_size=100)
+algorithm = NSGA2(pop_size=80)
 res = minimize(problem,
                algorithm,
-               ("n_gen", 100),
+               ("n_gen", 125),
                save_history=True,
                seed=SEED,
                verbose=False)
-
-# Extract all objective values
-obj_vals = []
-for row in res.history:
-    for fi in row.result().F:
-        obj_vals.append(fi)
-obj_vals = np.asarray(obj_vals)
 
 # Initialize performance arrays
 rmse_vals = []
@@ -56,15 +49,16 @@ hv_vals = []
 bbf_num = []
 # Create a performance evaluator for this problem and loop over budgets
 perf_eval = PerformanceEvaluator()
-for i in range(100, BB_BUDGET, 100):
-    hv_vals.append(perf_eval.hypervolume(obj_vals[:i, :]))
-    rmse_vals.append(perf_eval.rmse(obj_vals[:i, :]))
-    npts_vals.append(perf_eval.numPts(obj_vals[:i, :]))
-    bbf_num.append(i)
-# Don't forget final budget
-hv_vals.append(perf_eval.hypervolume(obj_vals))
-rmse_vals.append(perf_eval.rmse(obj_vals))
-bbf_num.append(BB_BUDGET)
+
+# Extract all objective values
+obj_vals = []
+for i, row in enumerate(res.history):
+    for fi in row.result().F:
+        obj_vals.append(fi)
+    hv_vals.append(perf_eval.hypervolume(np.asarray(obj_vals)))
+    rmse_vals.append(perf_eval.rmse(np.asarray(obj_vals)))
+    npts_vals.append(perf_eval.numPts(np.asarray(obj_vals)))
+    bbf_num.append((i+1)*80)
 
 # Dump results to csv file
 with open(FILENAME, "w") as fp:
