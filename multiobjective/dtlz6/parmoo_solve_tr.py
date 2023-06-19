@@ -49,7 +49,7 @@ for i in range(num_des):
 moop_tr.addSimulation({'name': "DTLZ_out",
                        'm': num_obj,
                        'sim_func': sim_func(moop_tr.getDesignType(),
-                                            num_obj=num_obj, offset=0.5),
+                                            num_obj=num_obj, offset=0.0),
                        'search': LatinHypercube,
                        'surrogate': LocalGaussRBF,
                        'hyperparams': {'search_budget': n_search_sz}})
@@ -74,7 +74,7 @@ import os
 os.environ["DEEPHYPER_BENCHMARK_NDIMS"] = str(num_des)
 os.environ["DEEPHYPER_BENCHMARK_NOBJS"] = str(num_obj)
 os.environ["DEEPHYPER_BENCHMARK_DTLZ_PROB"] = str(PROB_NUM)
-os.environ["DEEPHYPER_BENCHMARK_DTLZ_OFFSET"] = "0.5" # [x_o, .., x_d]*=0.5
+os.environ["DEEPHYPER_BENCHMARK_DTLZ_OFFSET"] = "0.0" # [x_o, .., x_d]*=0.0
 
 # Load deephyper performance evaluator
 from deephyper_benchmark.lib.DTLZ.metrics import PerformanceEvaluator

@@ -25,7 +25,7 @@ NOBJS = 3 # 3 objs
 os.environ["DEEPHYPER_BENCHMARK_NDIMS"] = str(NDIMS)
 os.environ["DEEPHYPER_BENCHMARK_NOBJS"] = str(NOBJS)
 os.environ["DEEPHYPER_BENCHMARK_DTLZ_PROB"] = PROB_NUM # DTLZ2 problem
-os.environ["DEEPHYPER_BENCHMARK_DTLZ_OFFSET"] = "0.5" # [x_o, .., x_d]*=0.5
+os.environ["DEEPHYPER_BENCHMARK_DTLZ_OFFSET"] = "0.0" # [x_o, .., x_d]*=0.0
 
 # Load DTLZ benchmark suite
 import deephyper_benchmark as dhb
