@@ -69,6 +69,15 @@ moop_tr.solve(iters_limit)
 results_tr = moop_tr.getObjectiveData(format='pandas')
 FILENAME = f"parmoo-tr/results_seed{SEED}.csv"
 
+# Set DTLZ problem environment variables
+import os
+os.environ["DEEPHYPER_BENCHMARK_NDIMS"] = str(num_des)
+os.environ["DEEPHYPER_BENCHMARK_NOBJS"] = str(num_obj)
+os.environ["DEEPHYPER_BENCHMARK_DTLZ_PROB"] = str(PROB_NUM)
+os.environ["DEEPHYPER_BENCHMARK_DTLZ_OFFSET"] = "0.5" # [x_o, .., x_d]*=0.5
+
+# Load deephyper performance evaluator
+from deephyper_benchmark.lib.DTLZ.metrics import PerformanceEvaluator
 
 # Collect performance stats
 obj_vals = []
