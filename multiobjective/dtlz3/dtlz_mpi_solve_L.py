@@ -27,7 +27,7 @@ else:
 FILENAME = f"dtlz_mpi_logs-L/results_seed{SEED}.csv"
 
 # Set default problem parameters
-PROB_NUM = "2"
+PROB_NUM = "3"
 BB_BUDGET = 10000 # 10K eval budget
 NDIMS = 8 # 8 vars
 NOBJS = 3 # 3 objs

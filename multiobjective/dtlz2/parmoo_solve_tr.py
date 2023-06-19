@@ -5,7 +5,7 @@ from parmoo import MOOP
 from parmoo.searches import LatinHypercube
 from parmoo.acquisitions import RandomConstraint
 
-from parmoo.simulations.dtlz import dtlz3_sim as sim_func # change dtlz1_sim -> dtlz{1,2,3,4,5,6,7}_sim
+from parmoo.simulations.dtlz import dtlz2_sim as sim_func # change dtlz1_sim -> dtlz{1,2,3,4,5,6,7}_sim
 from parmoo.objectives.obj_lib import single_sim_out
 
 # Turn on logging with timestamps
@@ -25,7 +25,7 @@ else:
 ### Problem dimensions ###
 num_des = 8
 num_obj = 3
-PROB_NUM = 3
+PROB_NUM = 2
 
 ### Budget variables ###
 n_search_sz = 2000 # 2000 pt initial DOE

@@ -6,12 +6,12 @@ CONF_BOUND = True
 
 # Dirs, names, and colors
 dirs = ["dtlz_mpi_logs-AC", "dtlz_mpi_logs-C", "dtlz_mpi_logs-L",
-        "dtlz_mpi_logs-P", "dtlz_mpi_logs-Q", "pymoo", "parmoo-rbf",
-        "parmoo-axy", "parmoo-tr"]
+        "dtlz_mpi_logs-P", "dtlz_mpi_logs-Q", "pymoo",
+        "parmoo-tr"]
 labels = ["DeepHyper AugCheb", "DeepHyper Cheb", "DeepHyper Linear",
           "DeepHyper PBI", "DeepHyper Quad", "NSGA-II (pymoo)",
-          "ParMOO w/ GP", "ParMOO w/ NN", "ParMOO Local"]
-colors = ["g", "r", "b", "c", "m", "y", "brown", "orange", "violet"]
+          "ParMOO Local"]
+colors = ["g", "r", "b", "c", "m", "y", "violet"]
 
 # Gather performance stats
 for di, DNAME in enumerate(dirs):
@@ -38,8 +38,8 @@ for di, DNAME in enumerate(dirs):
         plt.plot(bbf_mean, hv_mean, "-", color=f"{colors[di]}", label=labels[di])
         # If more than 1 result, plot std devs
         if n > 1 and CONF_BOUND:
-            hv_std = np.std(np.array(hv_vals), axis=0)
-            rmse_std = np.std(np.array(rmse_vals), axis=0)
+            hv_std = np.std(np.array(hv_vals), axis=0) / np.sqrt(10)
+            rmse_std = np.std(np.array(rmse_vals), axis=0) / np.sqrt(10)
             plt.fill_between(bbf_mean, hv_mean - hv_std, hv_mean + hv_std,
                              color=f"{colors[di]}", alpha=0.2)
 
