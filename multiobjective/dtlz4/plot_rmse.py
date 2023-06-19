@@ -6,11 +6,12 @@ CONF_BOUND = True
 
 # Dirs, names, and colors
 dirs = ["dtlz_mpi_logs-AC", "dtlz_mpi_logs-C", "dtlz_mpi_logs-L",
-        "dtlz_mpi_logs-P", "dtlz_mpi_logs-Q", "pymoo", "parmoo-tr"]
+        "dtlz_mpi_logs-P", "dtlz_mpi_logs-Q", "pymoo", "parmoo-rbf",
+        "parmoo-tr"]
 labels = ["DeepHyper AugCheb", "DeepHyper Cheb", "DeepHyper Linear",
           "DeepHyper PBI", "DeepHyper Quad", "NSGA-II (pymoo)",
-          "ParMOO Local"]
-colors = ["g", "r", "b", "c", "m", "y", "violet"]
+          "ParMOO w/ GP", "ParMOO Local"]
+colors = ["g", "r", "b", "c", "m", "y", "orange", "violet"]
 
 # Gather performance stats
 for di, DNAME in enumerate(dirs):
@@ -48,5 +49,4 @@ plt.ylabel("RMSE of Pareto optimal points")
 plt.legend(loc="upper right")
 plt.tight_layout()
 #plt.show()
-plt.savefig("dtlz1_rmse.png")
-
+plt.savefig("dtlz3_rmse.png")
