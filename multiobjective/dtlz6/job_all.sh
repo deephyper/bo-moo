@@ -24,7 +24,7 @@ export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf"
 
 # Set the seed
 #for seed in 0 1 2 3 4 5 6 7 8 9
-for seed in 7 8 9
+for seed in 5 6 7 8 9
 do
 	# Run DeepHyper AC
 	# Setup Redis Database
