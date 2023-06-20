@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+import getpass
 
 import mpi4py
 
@@ -18,28 +19,36 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
+LOG_DIR = os.environ["DEEPHYPER_LOG_DIR"]
+
+username = getpass.getuser()
+host = os.environ["OPTUNA_DB_HOST"]
+storage = f"postgresql://{username}@{host}:5432/hpo"
+
 # Set the random seed from CL or system clock
 if len(sys.argv) > 1:
     SEED = int(sys.argv[1])
 else:
     from datetime import datetime
+
     SEED = int(datetime.now().timestamp())
-FILENAME = f"optuna_nsgaii_logs/results_seed{SEED}.csv"
+FILENAME = f"{LOG_DIR}/results_seed{SEED}.csv"
 
 # Set default problem parameters
 PROB_NUM = "2"
-BB_BUDGET = 100 # 10K eval budget
-NDIMS = 8 # 8 vars
-NOBJS = 3 # 3 objs
+BB_BUDGET = 100  # 10K eval budget
+NDIMS = 8  # 8 vars
+NOBJS = 3  # 3 objs
 
 # Set DTLZ problem environment variables
 os.environ["DEEPHYPER_BENCHMARK_NDIMS"] = str(NDIMS)
 os.environ["DEEPHYPER_BENCHMARK_NOBJS"] = str(NOBJS)
-os.environ["DEEPHYPER_BENCHMARK_DTLZ_PROB"] = PROB_NUM # DTLZ2 problem
-os.environ["DEEPHYPER_BENCHMARK_DTLZ_OFFSET"] = "0.5" # [x_o, .., x_d]*=0.5
+os.environ["DEEPHYPER_BENCHMARK_DTLZ_PROB"] = PROB_NUM  # DTLZ2 problem
+os.environ["DEEPHYPER_BENCHMARK_DTLZ_OFFSET"] = "0.5"  # [x_o, .., x_d]*=0.5
 
 # Load DTLZ benchmark suite
 import deephyper_benchmark as dhb
+
 dhb.load("DTLZ")
 from deephyper_benchmark.lib.dtlz import hpo
 
@@ -51,20 +60,22 @@ rank = comm.Get_rank()
 if rank == 0:
     logging.basicConfig(
         level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(filename)s:%(funcName)s - " + \
-               "%(message)s",
+        format="%(asctime)s - %(levelname)s - %(filename)s:%(funcName)s - "
+        + "%(message)s",
         force=True,
     )
 
 # define the optuna search
-search = MPIDistributedOptuna(hpo.problem,
-                              hpo.run,
-                              random_state=SEED,
-                              log_dir="optuna_nsgaii_logs",
-                              sampler="NSGAII",
-                              #storage="TODO",
-                              comm=comm,
-                              n_objectives=3)
+search = MPIDistributedOptuna(
+    hpo.problem,
+    hpo.run,
+    random_state=SEED,
+    log_dir=LOG_DIR,
+    sampler="NSGAII",
+    storage=storage,
+    comm=comm,
+    n_objectives=NOBJS,
+)
 # Solve with BB_BUDGET evals
 results = search.search(max_evals=BB_BUDGET)
 
@@ -74,7 +85,13 @@ if rank == 0:
     import numpy as np
 
     # Extract objective values from dataframe
-    obj_vals = np.asarray([results["objective_0"].values, results["objective_1"].values, results["objective_2"].values]).T
+    obj_vals = np.asarray(
+        [
+            results["objective_0"].values,
+            results["objective_1"].values,
+            results["objective_2"].values,
+        ]
+    ).T
 
     # Initialize performance arrays
     rmse_vals = []
@@ -95,8 +112,11 @@ if rank == 0:
 
     # Dump results to csv file
     import csv
+
     with open(FILENAME, "w") as fp:
         writer = csv.writer(fp)
         writer.writerow(bbf_num)
         writer.writerow(hv_vals)
         writer.writerow(rmse_vals)
+
+MPI.Finalize()
