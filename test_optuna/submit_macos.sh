@@ -10,6 +10,10 @@
 # This script also requires installing the correct `sqlalchemy` depenedency:
 # $ pip install psycopg2
 
+# - 3
+# Pre-built C binaries for sqlalchemy:
+# $ pip install psycopg2-binary
+
 set -x
 
 
