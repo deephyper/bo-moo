@@ -24,6 +24,7 @@ LOG_DIR = os.environ["DEEPHYPER_LOG_DIR"]
 username = getpass.getuser()
 host = os.environ["OPTUNA_DB_HOST"]
 storage = f"postgresql://{username}@{host}:5432/hpo"
+print(storage)
 
 # Set the random seed from CL or system clock
 if len(sys.argv) > 1:

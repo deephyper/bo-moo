@@ -49,5 +49,5 @@ plt.ylabel("Total hypervolume dominated")
 plt.legend(loc="lower right")
 plt.tight_layout()
 #plt.show()
-plt.savefig("dtlz3_hv.png")
+plt.savefig("dtlz7_hv.png")
 
