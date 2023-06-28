@@ -9,7 +9,7 @@ dirs = ["dtlz_mpi_logs-AC", "dtlz_mpi_logs-C", "dtlz_mpi_logs-L",
         "dtlz_mpi_logs-P", "dtlz_mpi_logs-Q", "pymoo", "parmoo-tr"]
 labels = ["DeepHyper AugCheb", "DeepHyper Cheb", "DeepHyper Linear",
           "DeepHyper PBI", "DeepHyper Quad", "NSGA-II (pymoo)",
-          "ParMOO Local"]
+          "ParMOO TR"]
 colors = ["g", "r", "b", "c", "m", "y", "violet"]
 
 # Gather performance stats
@@ -39,7 +39,8 @@ for di, DNAME in enumerate(dirs):
         if n > 1 and CONF_BOUND:
             hv_std = np.std(np.array(hv_vals), axis=0) / np.sqrt(10)
             rmse_std = np.std(np.array(rmse_vals), axis=0) / np.sqrt(10)
-            plt.fill_between(bbf_mean, rmse_mean - rmse_std, rmse_mean + rmse_std,
+            plt.fill_between(bbf_mean, rmse_mean - 1.96*rmse_std,
+                             rmse_mean + 1.96*rmse_std,
                              color=f"{colors[di]}", alpha=0.2)
 
 # Add legends and show
