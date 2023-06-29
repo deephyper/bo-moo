@@ -31,11 +31,11 @@ for di, DNAME in enumerate(subdirs):
                     avg_bbf.append([float(x) for x in csv_reader.__next__()])
                     avg_hv.append([float(x) for x in csv_reader.__next__()])
                     avg_rmse.append([float(x) for x in csv_reader.__next__()])
+                bbf_num.append(np.mean(np.asarray(avg_bbf), axis=0).tolist())
+                hv_vals.append(np.mean(np.asarray(avg_hv), axis=0).tolist())
+                rmse_vals.append(np.mean(np.asarray(avg_rmse), axis=0).tolist())
             except FileNotFoundError:
                 print(f"skipping {DIR}/{FNAME}")
-            bbf_num.append(np.mean(np.asarray(avg_bbf), axis=0).tolist())
-            hv_vals.append(np.mean(np.asarray(avg_hv), axis=0).tolist())
-            rmse_vals.append(np.mean(np.asarray(avg_rmse), axis=0).tolist())
     # Check how many results found
     n = len(bbf_num)
     # Plot mean
