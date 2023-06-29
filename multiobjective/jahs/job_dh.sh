@@ -21,7 +21,7 @@ export NNODES=`wc -l < $PBS_NODEFILE` # Get number of nodes checked out
 export NTOTRANKS=$(( $NNODES * $NRANKS_PER_NODE )) # 25 n * 4 w/n = 100 w
 export OMP_NUM_THREADS=$NDEPTH
 
-export log_dir="jahs_mpi_logs-AC"
+export log_dir="jahs_mpi_logs-dh"
 export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf"
 export PYTHONPATH=$PYTHONPATH:/home/tchang
 
@@ -40,67 +40,67 @@ mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    python jahs_mpi_solve_AC.py 0
+    python jahs_mpi_solve_dh.py 0
 
 # Run the DeepHyper script
 mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    python jahs_mpi_solve_AC.py 1
+    python jahs_mpi_solve_dh.py 1
 
 # Run the DeepHyper script
 mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    python jahs_mpi_solve_AC.py 2
+    python jahs_mpi_solve_dh.py 2
 
 # Run the DeepHyper script
 mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    python jahs_mpi_solve_AC.py 3
+    python jahs_mpi_solve_dh.py 3
 
 # Run the DeepHyper script
 mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    python jahs_mpi_solve_AC.py 4
+    python jahs_mpi_solve_dh.py 4
 
 # Run the DeepHyper script
 mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    python jahs_mpi_solve_AC.py 5
+    python jahs_mpi_solve_dh.py 5
 
 # Run the DeepHyper script
 mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    python jahs_mpi_solve_AC.py 6
+    python jahs_mpi_solve_dh.py 6
 
 # Run the DeepHyper script
 mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    python jahs_mpi_solve_AC.py 7
+    python jahs_mpi_solve_dh.py 7
 
 # Run the DeepHyper script
 mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    python jahs_mpi_solve_AC.py 8
+    python jahs_mpi_solve_dh.py 8
 
 # Run the DeepHyper script
 mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    python jahs_mpi_solve_AC.py 9
+    python jahs_mpi_solve_dh.py 9

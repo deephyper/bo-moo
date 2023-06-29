@@ -1,7 +1,6 @@
 
 import numpy as np
 import pandas as pd
-import time
 from parmoo.extras.libe import libE_MOOP
 from parmoo.searches import LatinHypercube
 from parmoo.acquisitions import RandomConstraint, FixedWeights
@@ -24,22 +23,22 @@ if len(sys.argv) > 1:
 else:
     from datetime import datetime
     SEED = int(datetime.now().timestamp())
-FILENAME = f"parmoo-tr/results_seed{SEED}.csv"
+FILENAME = "runtimes.csv"
 np.random.seed(SEED)
 
 ### Problem dimensions ###
-num_des = 9
-num_obj = 3
+num_des = 8
+num_obj = 2
 
 ### Budget variables ###
-n_search_sz = 200 # 200 pt initial DOE
+n_search_sz = 10000 # 10000 pt initial DOE
 n_per_batch = 40 # batch size = 40
-iters_limit = 20 # run for 20 iterations
-wait = False
+iters_limit = 0 # run for 0 iterations
 
 ### JAHS bench settings ###
-DATASET = "fashion_mnist"
+DATASET = "cifar10"
 MODEL_PATH = "."
+NEPOCHS = 200
 N_ITERATIONS = 100
 # Define the benchmark
 benchmark = Benchmark(
@@ -78,19 +77,13 @@ def sim_func(x):
         config['TrivialAugment'] = True
     else:
         config['TrivialAugment'] = False
-    NEPOCHS = 200
-    if "nepochs" in x.dtype.names:
-        NEPOCHS = x['nepochs']
     # Evaluate and return
-    sx = np.zeros(3)
+    sx = np.zeros(2)
     result = benchmark(config, nepochs=NEPOCHS)
     sx[0] = 100 - result[NEPOCHS]['valid-acc']
     sx[1] = result[NEPOCHS]['latency']
-    sx[2] = result[NEPOCHS]['size_MB']
-    # If we're waiting, wait for 1% of total runtime
-    if wait:
-        t_sleep = result[NEPOCHS]['runtime'] * 0.01
-        time.sleep(t_sleep)
+    with open(FILENAME, "a") as fp:
+        fp.write(f"{result['runtime']}\n")
     return sx
 
 
@@ -112,15 +105,11 @@ if __name__ == "__main__":
     moop_tr.addDesign({'name': "TrivialAugment",
                         'des_type': "categorical",
                         'levels': ["on", "off"]})
-    # 6 architecture variables
+    # 6 integer variables
     for i in range(1, 7):
         moop_tr.addDesign({'name': f"Op{i}",
                             'des_type': "integer",
                             'lb': 0, 'ub': 4})
-    # number of epochs
-    moop_tr.addDesign({'name': "nepochs",
-                        'des_type': "integer",
-                        'lb': 1, 'ub': 200})
     # JAHS benchmark
     moop_tr.addSimulation({'name': "jahs",
                             'm': num_obj,
@@ -128,7 +117,7 @@ if __name__ == "__main__":
                             'search': LatinHypercube,
                             'surrogate': LocalGaussRBF,
                             'hyperparams': {'search_budget': n_search_sz}})
-    # Minimize 3 objectives
+    # Minimize 2 objectives
     moop_tr.addObjective({'name': "valid-loss",
                            'obj_func': single_sim_out(moop_tr.getDesignType(),
                                                       moop_tr.getSimulationType(),
@@ -137,22 +126,15 @@ if __name__ == "__main__":
                            'obj_func': single_sim_out(moop_tr.getDesignType(),
                                                       moop_tr.getSimulationType(),
                                                       ("jahs", 1))})
-    moop_tr.addObjective({'name': "size_MB",
-                           'obj_func': single_sim_out(moop_tr.getDesignType(),
-                                                      moop_tr.getSimulationType(),
-                                                      ("jahs", 2))})
     # q acquisition functions, 1 fixed
-    weights = np.ones(3)
-    weights[1] = 1.0e1
-    weights[2] = 5.0e1
+    weights = np.ones(2)
+    weights[1] = 1.0e2
     moop_tr.addAcquisition({'acquisition': FixedWeights,
                             'hyperparams': {'weights': weights}})
     for i in range(n_per_batch-1):
         moop_tr.addAcquisition({'acquisition': RandomConstraint,
                                 'hyperparams': {}})
     # Solve and dump to csv
-    moop_tr.solve(sim_max=1000)
-    results_tr = moop_tr.getObjectiveData()
-    pd.DataFrame(results_tr).to_csv(FILENAME)
+    moop_tr.solve(sim_max=100)
 
 

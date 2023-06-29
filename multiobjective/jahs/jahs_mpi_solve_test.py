@@ -2,32 +2,23 @@ import logging
 import os
 import sys
 
+from mpi4py import MPI
+from deephyper.search.hps import MPIDistributedBO
+
 # Set the random seed from CL or system clock
 if len(sys.argv) > 1:
     SEED = int(sys.argv[1])
 else:
     from datetime import datetime
     SEED = int(datetime.now().timestamp())
-FILENAME = f"jahs_mpi_logs-AC/results_seed{SEED}.csv"
+FILENAME = f"jahs_mpi_logs-test/results_seed{SEED}.csv"
 
 # Set default problem parameters
-BB_BUDGET = 1000 # 1K eval budget
+BB_BUDGET = 100 # 100 eval budget
 
-import mpi4py
-
-mpi4py.rc.initialize = False
-mpi4py.rc.threads = True
-mpi4py.rc.thread_level = "multiple"
-
-from mpi4py import MPI
-from deephyper.search.hps import MPIDistributedBO
-
-if not MPI.Is_initialized():
-    MPI.Init_thread()
-
+# Create MPI ranks
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
-size = comm.Get_size()
 
 # Setup info-level logging
 if rank == 0:
@@ -58,10 +49,10 @@ search = MPIDistributedBO(hpo.problem,
                           evaluator,
                           update_prior=True,
                           moo_scalarization_strategy="rAugChebyshev",
-                          log_dir="jahs_mpi_logs-AC",
+                          log_dir="jahs_mpi_logs-test",
                           random_state=SEED,
                           comm=comm)
 
 # Solve with BB_BUDGET evals
 results = search.search(max_evals=BB_BUDGET, timeout=10800)
-results.to_csv(f"jahs_mpi_logs-AC/results_seed{SEED}.csv")
+results.to_csv(f"jahs_mpi_logs-test/results_seed{SEED}.csv")
