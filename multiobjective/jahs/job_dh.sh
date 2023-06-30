@@ -35,72 +35,12 @@ popd
 
 sleep 5
 
-# Run the DeepHyper script
-mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
-    --depth=${NDEPTH} \
-    --cpu-bind depth \
-    --envall \
-    python jahs_mpi_solve_dh.py 0
-
-# Run the DeepHyper script
-mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
-    --depth=${NDEPTH} \
-    --cpu-bind depth \
-    --envall \
-    python jahs_mpi_solve_dh.py 1
-
-# Run the DeepHyper script
-mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
-    --depth=${NDEPTH} \
-    --cpu-bind depth \
-    --envall \
-    python jahs_mpi_solve_dh.py 2
-
-# Run the DeepHyper script
-mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
-    --depth=${NDEPTH} \
-    --cpu-bind depth \
-    --envall \
-    python jahs_mpi_solve_dh.py 3
-
-# Run the DeepHyper script
-mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
-    --depth=${NDEPTH} \
-    --cpu-bind depth \
-    --envall \
-    python jahs_mpi_solve_dh.py 4
-
-# Run the DeepHyper script
-mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
-    --depth=${NDEPTH} \
-    --cpu-bind depth \
-    --envall \
-    python jahs_mpi_solve_dh.py 5
-
-# Run the DeepHyper script
-mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
-    --depth=${NDEPTH} \
-    --cpu-bind depth \
-    --envall \
-    python jahs_mpi_solve_dh.py 6
-
-# Run the DeepHyper script
-mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
-    --depth=${NDEPTH} \
-    --cpu-bind depth \
-    --envall \
-    python jahs_mpi_solve_dh.py 7
-
-# Run the DeepHyper script
-mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
-    --depth=${NDEPTH} \
-    --cpu-bind depth \
-    --envall \
-    python jahs_mpi_solve_dh.py 8
-
-# Run the DeepHyper script
-mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
-    --depth=${NDEPTH} \
-    --cpu-bind depth \
-    --envall \
-    python jahs_mpi_solve_dh.py 9
+# Run the DeepHyper script 10x
+for SEED in 0 # 1 2 3 4 5 6 7 8 9
+do
+	mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
+	    --depth=${NDEPTH} \
+	    --cpu-bind depth \
+	    --envall \
+	    python jahs_mpi_solve_dh.py $SEED
+done
