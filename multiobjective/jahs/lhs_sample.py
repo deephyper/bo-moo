@@ -36,7 +36,7 @@ n_per_batch = 40 # batch size = 40
 iters_limit = 0 # run for 0 iterations
 
 ### JAHS bench settings ###
-DATASET = "cifar10"
+DATASET = "fashion_mnist"
 MODEL_PATH = "."
 NEPOCHS = 200
 N_ITERATIONS = 100
