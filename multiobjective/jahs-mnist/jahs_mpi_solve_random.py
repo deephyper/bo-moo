@@ -42,7 +42,7 @@ from deephyper_benchmark.lib.JAHSBench import hpo
 
 # define MPI evaluator
 evaluator = MPIDistributedBO.bootstrap_evaluator(
-    hpo.run,
+    lambda job: hpo.run(job, sleep=True),
     evaluator_type="serial",
     storage_type="redis",
     storage_kwargs={
@@ -64,5 +64,5 @@ search = MPIDistributedBO(hpo.problem,
                           comm=comm)
 
 # Solve with BB_BUDGET evals, 3 hr limit
-results = search.search(max_evals=BB_BUDGET, timeout=10800)
+results = search.search(max_evals=BB_BUDGET, timeout=10000)
 results.to_csv(f"jahs_mpi_logs-random/results_seed{SEED}.csv")

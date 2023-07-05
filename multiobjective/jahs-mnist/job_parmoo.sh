@@ -2,7 +2,7 @@
 #PBS -l select=10:system=polaris
 #PBS -l place=scatter
 #PBS -l walltime=03:00:00
-# #PBS -q debug 
+##PBS -q debug 
 #PBF -q prod
 #PBS -A datascience
 #PBS -l filesystems=grand:home
@@ -15,7 +15,7 @@ cd ${PBS_O_WORKDIR}
 source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh
 
 # Random seed
-export SEED=0
+export SEED=3
 
 # Configuration to place 1 worker per GPU
 export NDEPTH=16 # this * NRANKS_PER_NODE (below) = 64
@@ -35,5 +35,5 @@ mpiexec -n ${NWORKERS} \
     --envall \
     python parmoo_solve_tr_libe.py $SEED
 # Save libE stats for runtime analysis
-mv libE_stats.txt $log_dir/stats_seed0.csv
+mv libE_stats.txt $log_dir/stats_seed$SEED.csv
 

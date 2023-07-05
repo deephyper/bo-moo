@@ -1,8 +1,8 @@
 #!/bin/bash
 #PBS -l select=10:system=polaris
 #PBS -l place=scatter
-#PBS -l walltime=01:00:00
-# #PBS -q debug 
+#PBS -l walltime=03:00:00
+##PBS -q debug 
 #PBF -q prod
 #PBS -A datascience
 #PBS -l filesystems=grand:home
@@ -36,7 +36,7 @@ popd
 sleep 5
 
 # Set random seed
-export SEED=0
+export SEED=6
 
 mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \

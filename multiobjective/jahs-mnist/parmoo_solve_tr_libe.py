@@ -27,15 +27,19 @@ else:
 FILENAME = f"parmoo-tr/results_seed{SEED}.csv"
 np.random.seed(SEED)
 
+# Get libE info
+from libensemble.tools import parse_args
+nworkers, is_manager, libE_specs, _ = parse_args()
+
 ### Problem dimensions ###
 num_des = 9
 num_obj = 3
 
 ### Budget variables ###
-n_search_sz = 200 # 200 pt initial DOE
+n_search_sz = 100 # 100 pt initial DOE
 n_per_batch = 40 # batch size = 40
-iters_limit = 200 # run for 200 iterations
-wait = False
+iters_limit = 200 # run for 200 iterations (not used)
+wait = True
 
 ### JAHS bench settings ###
 DATASET = "fashion_mnist"
@@ -151,8 +155,10 @@ if __name__ == "__main__":
         moop_tr.addAcquisition({'acquisition': RandomConstraint,
                                 'hyperparams': {}})
     # Solve and dump to csv
-    moop_tr.solve(sim_max=10000, wallclock_max=10800)
-    results_tr = moop_tr.getObjectiveData()
-    pd.DataFrame(results_tr).to_csv(FILENAME)
+    moop_tr.solve(sim_max=10000, wt_max=9000) # stop early to finalize results
+    if is_manager:
+        results_tr = moop_tr.getObjectiveData(format='pandas')
+        with open(FILENAME, "w") as fp:
+            results_tr.to_csv(fp)
 
 
