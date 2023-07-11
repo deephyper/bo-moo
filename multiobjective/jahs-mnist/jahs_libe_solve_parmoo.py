@@ -24,7 +24,7 @@ if len(sys.argv) > 1:
 else:
     from datetime import datetime
     SEED = int(datetime.now().timestamp())
-FILENAME = f"parmoo-tr/results_seed{SEED}.csv"
+FILENAME = "results.csv"
 np.random.seed(SEED)
 
 # Get libE info
@@ -36,21 +36,20 @@ num_des = 9
 num_obj = 3
 
 ### Budget variables ###
-n_search_sz = 100 # 100 pt initial DOE
-n_per_batch = 40 # batch size = 40
-iters_limit = 200 # run for 200 iterations (not used)
+n_search_sz = 2*nworkers # 2*nworkers initial DOE
+n_per_batch = nworkers # batch size = nworkers
 wait = True
 
 ### JAHS bench settings ###
 DATASET = "fashion_mnist"
-MODEL_PATH = "."
+MODEL_PATH = "../.."
 N_ITERATIONS = 100
 # Define the benchmark
 benchmark = Benchmark(
         task=DATASET,
         save_dir=MODEL_PATH,
         kind="surrogate",
-        download=True
+        download=False,
     )
 
 
@@ -155,7 +154,7 @@ if __name__ == "__main__":
         moop_tr.addAcquisition({'acquisition': RandomConstraint,
                                 'hyperparams': {}})
     # Solve and dump to csv
-    moop_tr.solve(sim_max=10000, wt_max=9000) # stop early to finalize results
+    moop_tr.solve(sim_max=1000, wt_max=8000) # stop early to finalize results
     if is_manager:
         results_tr = moop_tr.getObjectiveData(format='pandas')
         with open(FILENAME, "w") as fp:

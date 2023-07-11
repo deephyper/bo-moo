@@ -1,8 +1,8 @@
 #!/bin/bash
-#PBS -l select=2:system=polaris
+#PBS -l select=40:system=polaris
 #PBS -l place=scatter
-#PBS -l walltime=01:00:00
-#PBS -q debug
+#PBS -l walltime=03:00:00
+#PBS -q prod
 #PBS -A datascience
 #PBS -l filesystems=grand:home
 
@@ -16,10 +16,10 @@ source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh
 #!!! CONFIGURATION - START
 # ~~~ EDIT: used to create the name of the experiment folder
 # ~~~ you can use the following variables and pass them to your python script
-export problem="dtlz"
-export search="NSGAII" # TPE is also valid
+export problem="jahs"
+export search="tpe" # TPE is also valid
 export timeout=10200
-export SEED=0
+export SEED=8
 #!!! CONFIGURATION - END
 
 export NRANKS_PER_NODE=4
@@ -28,7 +28,8 @@ export NNODES=`wc -l < $PBS_NODEFILE`
 export NTOTRANKS=$(( $NNODES * $NRANKS_PER_NODE ))
 export OMP_NUM_THREADS=$NDEPTH
 
-export DEEPHYPER_LOG_DIR="results/$problem-mpi-logs-$search-$NNODES-$SEED"
+export PYTHONPATH=$PYTHONPATH:/home/tchang
+export DEEPHYPER_LOG_DIR="results/$problem-$search-$NNODES-$SEED"
 mkdir -p $DEEPHYPER_LOG_DIR
 
 ### Setup Postgresql Database - START ###
@@ -54,7 +55,8 @@ mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    ./set_affinity_gpu_polaris.sh python3 dtlz_mpi_solve_optuna.py $SEED
+    ./set_affinity_gpu_polaris.sh python3 jahs_mpi_solve_tpe.py $SEED
 
 dropdb hpo
 pg_ctl -D $OPTUNA_DB_DIR -l "$log_dir/db.log" stop
+rm -rf $OPTUNA_DB_DIR
