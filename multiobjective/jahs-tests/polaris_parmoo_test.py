@@ -96,7 +96,7 @@ def sim_func(x):
     # If we're waiting, wait for 1% of total runtime
     if wait:
         #t_sleep = result[NEPOCHS]['runtime'] * 0.01
-        t_sleep = NEPOCHS * np.random.rand()
+        t_sleep = NEPOCHS * np.random.rand() * 0.6
         time.sleep(t_sleep)
     return sx
 
