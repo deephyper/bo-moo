@@ -36,7 +36,7 @@ num_des = 9
 num_obj = 3
 
 ### Budget variables ###
-n_search_sz = 2*nworkers # 2*nworkers initial DOE
+n_search_sz = 4*nworkers # 2*nworkers initial DOE
 n_per_batch = nworkers # batch size = nworkers
 wait = True
 
@@ -96,7 +96,7 @@ def sim_func(x):
     # If we're waiting, wait for 1% of total runtime
     if wait:
         #t_sleep = result[NEPOCHS]['runtime'] * 0.01
-        t_sleep = NEPOCHS * np.random.rand() * 0.6
+        t_sleep = NEPOCHS * np.random.rand() * 0.01
         time.sleep(t_sleep)
     return sx
 
@@ -158,7 +158,7 @@ if __name__ == "__main__":
         moop_tr.addAcquisition({'acquisition': RandomConstraint,
                                 'hyperparams': {}})
     # Solve and dump to csv
-    moop_tr.solve(sim_max=10000, wt_max=300) # stop early to finalize results
+    moop_tr.solve(sim_max=100, wt_max=300) # stop early to finalize results
     if is_manager:
         results_tr = moop_tr.getObjectiveData(format='pandas')
         with open(FILENAME, "w") as fp:
