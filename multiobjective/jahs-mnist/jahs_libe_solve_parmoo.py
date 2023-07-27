@@ -36,7 +36,7 @@ num_des = 9
 num_obj = 3
 
 ### Budget variables ###
-n_search_sz = 2*nworkers # 2*nworkers initial DOE
+n_search_sz = 1*nworkers # 1*nworkers initial DOE
 n_per_batch = nworkers # batch size = nworkers
 wait = True
 

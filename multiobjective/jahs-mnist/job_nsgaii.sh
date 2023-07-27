@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l select=40:system=polaris
+#PBS -l select=30:system=polaris
 #PBS -l place=scatter
 #PBS -l walltime=03:00:00
 #PBS -q prod
@@ -28,7 +28,6 @@ export NNODES=`wc -l < $PBS_NODEFILE`
 export NTOTRANKS=$(( $NNODES * $NRANKS_PER_NODE ))
 export OMP_NUM_THREADS=$NDEPTH
 
-export PYTHONPATH=$PYTHONPATH:/home/tchang
 export DEEPHYPER_LOG_DIR="results/$problem-$search-$NNODES-$SEED"
 mkdir -p $DEEPHYPER_LOG_DIR
 

@@ -8,10 +8,6 @@ if len(sys.argv) > 1:
 else:
     from datetime import datetime
     SEED = int(datetime.now().timestamp())
-FILENAME = f"jahs_mpi_logs-dh/results_seed{SEED}.csv"
-
-# Set default problem parameters
-BB_BUDGET = 1000 # 1K eval budget
 
 import mpi4py
 
@@ -29,6 +25,8 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
+LOG_DIR = os.environ["DEEPHYPER_LOG_DIR"]
+
 # Setup info-level logging
 if rank == 0:
     logging.basicConfig(
@@ -42,7 +40,7 @@ from deephyper_benchmark.lib.JAHSBench import hpo
 
 # define MPI evaluator
 evaluator = MPIDistributedBO.bootstrap_evaluator(
-    hpo.run,
+    lambda job: hpo.run(job, sleep=True),
     evaluator_type="serial",
     storage_type="redis",
     storage_kwargs={
@@ -56,11 +54,11 @@ evaluator = MPIDistributedBO.bootstrap_evaluator(
 # define the search method and scalarization
 search = MPIDistributedBO(hpo.problem,
                           evaluator,
+                          moo_lower_bounds=[0.8, None, None],
                           moo_scalarization_strategy="rChebyshev",
-                          log_dir="jahs_mpi_logs-dh",
+                          log_dir=LOG_DIR,
                           random_state=SEED,
                           comm=comm)
 
-# Solve with BB_BUDGET evals
-results = search.search(max_evals=BB_BUDGET, timeout=10800)
-results.to_csv(f"jahs_mpi_logs-dh/results_seed{SEED}.csv")
+# Solve with 10000 evals, 10000 sec limit
+results = search.search(max_evals=10000, timeout=10000)

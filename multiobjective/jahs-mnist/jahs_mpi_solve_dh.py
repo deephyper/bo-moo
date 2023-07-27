@@ -36,7 +36,9 @@ if rank == 0:
         force=True,
     )
 
-from deephyper_benchmark.lib.JAHSBench import hpo
+import deephyper_benchmark as dhb
+dhb.load("JAHSBench")
+from deephyper_benchmark.lib.jahsbench import hpo
 
 # define MPI evaluator
 evaluator = MPIDistributedBO.bootstrap_evaluator(

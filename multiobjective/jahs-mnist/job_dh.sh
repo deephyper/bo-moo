@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l select=40:system=polaris
+#PBS -l select=20:system=polaris
 #PBS -l place=scatter
 #PBS -l walltime=03:00:00
 ##PBS -q debug 
@@ -19,7 +19,7 @@ source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh
 # ~~~ you can use the following variables and pass them to your python script
 export problem="jahs"
 export search="dh"
-export SEED=9
+export SEED=5
 #!!! CONFIGURATION - END
 #
 
@@ -32,7 +32,6 @@ export OMP_NUM_THREADS=$NDEPTH
 
 # Mkdirs / activation files
 export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf"
-export PYTHONPATH=$PYTHONPATH:/home/tchang
 export DEEPHYPER_LOG_DIR="results/$problem-$search-$NNODES-$SEED"
 mkdir -p $DEEPHYPER_LOG_DIR
 
