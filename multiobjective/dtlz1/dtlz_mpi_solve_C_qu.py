@@ -24,7 +24,7 @@ if len(sys.argv) > 1:
 else:
     from datetime import datetime
     SEED = int(datetime.now().timestamp())
-FILENAME = f"dtlz_mpi_logs-AC_mml/results_seed{SEED}.csv"
+FILENAME = f"dtlz_mpi_logs-C_qu/results_seed{SEED}.csv"
 
 # Set default problem parameters
 PROB_NUM = "1"
@@ -73,10 +73,10 @@ evaluator = MPIDistributedBO.bootstrap_evaluator(
 search = MPIDistributedBO(hpo.problem,
                           evaluator,
                           update_prior=True,
-                          moo_scalarization_strategy="AugChebyshev",
+                          moo_scalarization_strategy="Chebyshev",
                           moo_scalarization_weight="random",
-                          objective_scaler="minmaxlog",
-                          log_dir="dtlz_mpi_logs-AC_mml",
+                          objective_scaler="quantile-uniform",
+                          log_dir="dtlz_mpi_logs-C_qu",
                           random_state=SEED,
                           comm=comm)
 # Solve with BB_BUDGET evals
