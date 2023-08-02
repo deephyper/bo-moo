@@ -50,6 +50,7 @@ rank = comm.Get_rank()
 # Setup info-level logging
 if rank == 0:
     logging.basicConfig(
+        filename="dtlz_mpi_logs-AC_qu/deephyper.log",
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(filename)s:%(funcName)s - " + \
                "%(message)s",
