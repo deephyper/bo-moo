@@ -99,12 +99,12 @@ if rank == 0:
     perf_eval = PerformanceEvaluator()
     for i in range(100, BB_BUDGET, 100):
         hv_vals.append(perf_eval.hypervolume(obj_vals[:i, :]))
-        rmse_vals.append(perf_eval.rmse(obj_vals[:i, :]))
+        rmse_vals.append(perf_eval.gdPlus(obj_vals[:i, :]))
         npts_vals.append(perf_eval.numPts(obj_vals[:i, :]))
         bbf_num.append(i)
     # Don't forget final budget
     hv_vals.append(perf_eval.hypervolume(obj_vals))
-    rmse_vals.append(perf_eval.rmse(obj_vals))
+    rmse_vals.append(perf_eval.gdPlus(obj_vals))
     bbf_num.append(BB_BUDGET)
 
     # Dump results to csv file
