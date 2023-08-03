@@ -89,7 +89,7 @@ for i, row in results_tr.iterrows():
     obj_vals.append([row['f1'], row['f2'], row['f3']])
     if (i+1) > 99 and (i+1) % 100 == 0:
         bbf_num.append(len(obj_vals))
-        rmse_vals.append(perf_eval.rmse(np.asarray(obj_vals)))
+        rmse_vals.append(perf_eval.gdPlus(np.asarray(obj_vals)))
         hv_vals.append(perf_eval.hypervolume(np.asarray(obj_vals)))
 
 # Dump results to csv file
