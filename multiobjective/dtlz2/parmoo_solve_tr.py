@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from parmoo import MOOP
 from parmoo.searches import LatinHypercube
-from parmoo.acquisitions import RandomConstraint
+from parmoo.acquisitions import RandomConstraint, FixedWeights
 
 from parmoo.simulations.dtlz import dtlz2_sim as sim_func # change dtlz1_sim -> dtlz{1,2,3,4,5,6,7}_sim
 from parmoo.objectives.obj_lib import single_sim_out
@@ -60,9 +60,16 @@ for i in range(num_obj):
                                                      moop_tr.getSimulationType(),
                                                      ("DTLZ_out", i))})
 
-for i in range(n_per_batch):
+# Randomize some acquisitions to explore PF
+for i in range(n_per_batch-num_obj-1):
    moop_tr.addAcquisition({'acquisition': RandomConstraint,
                            'hyperparams': {}})
+# Fix some to converge -- following high-dimensional MOO tutorial
+for i in range(num_obj):
+   moop_tr.addAcquisition({'acquisition': FixedWeights,
+                           'hyperparams': {'weights': np.eye(num_obj)[i]}})
+moop_tr.addAcquisition({'acquisition': FixedWeights,
+                        'hyperparams': {'weights': np.ones(num_obj)/num_obj}})
 
 # Solve and dump to csv
 moop_tr.solve(iters_limit)
