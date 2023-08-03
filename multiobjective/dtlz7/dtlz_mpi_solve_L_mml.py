@@ -24,10 +24,10 @@ if len(sys.argv) > 1:
 else:
     from datetime import datetime
     SEED = int(datetime.now().timestamp())
-FILENAME = f"dtlz_mpi_logs-P/results_seed{SEED}.csv"
+FILENAME = f"dtlz_mpi_logs-L_mml/results_seed{SEED}.csv"
 
 # Set default problem parameters
-PROB_NUM = "5"
+PROB_NUM = "7"
 BB_BUDGET = 10000 # 10K eval budget
 NDIMS = 8 # 8 vars
 NOBJS = 3 # 3 objs
@@ -36,7 +36,7 @@ NOBJS = 3 # 3 objs
 os.environ["DEEPHYPER_BENCHMARK_NDIMS"] = str(NDIMS)
 os.environ["DEEPHYPER_BENCHMARK_NOBJS"] = str(NOBJS)
 os.environ["DEEPHYPER_BENCHMARK_DTLZ_PROB"] = PROB_NUM # DTLZ2 problem
-os.environ["DEEPHYPER_BENCHMARK_DTLZ_OFFSET"] = "0.5" # [x_o, .., x_d]*=0.5
+os.environ["DEEPHYPER_BENCHMARK_DTLZ_OFFSET"] = "0.0" # [x_o, .., x_d]*=0.0
 
 # Load DTLZ benchmark suite
 import deephyper_benchmark as dhb
@@ -74,8 +74,8 @@ search = MPIDistributedBO(hpo.problem,
                           evaluator,
                           random_state=SEED,
                           update_prior=True,
-                          moo_scalarization_strategy="rPBI",
-                          log_dir="dtlz_mpi_logs-P",
+                          moo_scalarization_strategy="Linear",
+                          log_dir="dtlz_mpi_logs-L_mml",
                           comm=comm)
 # Solve with BB_BUDGET evals
 results = search.search(max_evals=BB_BUDGET, timeout=10800)
