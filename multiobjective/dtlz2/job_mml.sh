@@ -28,7 +28,7 @@ for seed in 6 7 8 9
 do
 	# Run DeepHyper AC
 	# Setup Redis Database
-	export log_dir="dtlz_mpi_logs-AC"
+	export log_dir="dtlz_mpi_logs-AC_mml"
 	mkdir -p $log_dir
 	pushd $log_dir
 	redis-server $REDIS_CONF &
@@ -40,13 +40,13 @@ do
 	    --depth=${NDEPTH} \
 	    --cpu-bind depth \
 	    --envall \
-	    python dtlz_mpi_solve_AC.py $seed
+	    python dtlz_mpi_solve_AC_mml.py $seed
 	# Stop the redis server
 	redis-cli shutdown
 	
 	# Run DeepHyper C
 	# Setup Redis Database
-	export log_dir="dtlz_mpi_logs-C"
+	export log_dir="dtlz_mpi_logs-C_mml"
 	mkdir -p $log_dir
 	pushd $log_dir
 	redis-server $REDIS_CONF &
@@ -58,13 +58,13 @@ do
 	    --depth=${NDEPTH} \
 	    --cpu-bind depth \
 	    --envall \
-	    python dtlz_mpi_solve_C.py $seed
+	    python dtlz_mpi_solve_C_mml.py $seed
 	# Stop the redis server
 	redis-cli shutdown
 	
 	# Run DeepHyper L
 	# Setup Redis Database
-	export log_dir="dtlz_mpi_logs-L"
+	export log_dir="dtlz_mpi_logs-L_mml"
 	mkdir -p $log_dir
 	pushd $log_dir
 	redis-server $REDIS_CONF &
@@ -76,13 +76,13 @@ do
 	    --depth=${NDEPTH} \
 	    --cpu-bind depth \
 	    --envall \
-	    python dtlz_mpi_solve_L.py $seed
+	    python dtlz_mpi_solve_L_mml.py $seed
 	# Stop the redis server
 	redis-cli shutdown
 	
 	# Run DeepHyper P
 	# Setup Redis Database
-	export log_dir="dtlz_mpi_logs-P"
+	export log_dir="dtlz_mpi_logs-P_mml"
 	mkdir -p $log_dir
 	pushd $log_dir
 	redis-server $REDIS_CONF &
@@ -94,13 +94,13 @@ do
 	    --depth=${NDEPTH} \
 	    --cpu-bind depth \
 	    --envall \
-	    python dtlz_mpi_solve_P.py $seed
+	    python dtlz_mpi_solve_P_mml.py $seed
 	# Stop the redis server
 	redis-cli shutdown
 	
 	# Run DeepHyper Q
 	# Setup Redis Database
-	export log_dir="dtlz_mpi_logs-Q"
+	export log_dir="dtlz_mpi_logs-Q_mml"
 	mkdir -p $log_dir
 	pushd $log_dir
 	redis-server $REDIS_CONF &
@@ -112,7 +112,7 @@ do
 	    --depth=${NDEPTH} \
 	    --cpu-bind depth \
 	    --envall \
-	    python dtlz_mpi_solve_Q.py $seed
+	    python dtlz_mpi_solve_Q_mml.py $seed
 	# Stop the redis server
 	redis-cli shutdown
 done
