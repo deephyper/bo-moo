@@ -5,8 +5,8 @@
 #PBS -q prod
 # #PBF -q preemptable
 #PBS -A datascience
-##PBS -l filesystems=grand:home
-#PBS -l filesystems=home
+#PBS -l filesystems=grand:home
+##PBS -l filesystems=home
 
 set -xe
 

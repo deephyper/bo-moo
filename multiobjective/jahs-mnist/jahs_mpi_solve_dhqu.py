@@ -36,6 +36,9 @@ if rank == 0:
         force=True,
     )
 
+# Set the problem name
+os.environ["DEEPHYPER_BENCHMARK_JAHS_PROB"] = "fashion_mnist"
+
 import deephyper_benchmark as dhb
 dhb.load("JAHSBench")
 from deephyper_benchmark.lib.jahsbench import hpo
@@ -60,7 +63,7 @@ search = MPIDistributedBO(hpo.problem,
                           moo_scalarization_weight="random",
                           # update_prior=True,
                           # update_prior_quantile=0.25,
-                          # moo_lower_bounds=[-0.5, None],
+                          moo_lower_bounds=[0.9, None, None],
                           objective_scaler="quantile-uniform",
                           #objective_scaler="minmaxlog",
                           verbose=1,
