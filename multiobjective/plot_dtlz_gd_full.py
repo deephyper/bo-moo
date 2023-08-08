@@ -119,18 +119,10 @@ mpl.rcParams.update({
 CONF_BOUND = True
 
 # Dirs, names, and colors
-<<<<<<< HEAD
-dirs = ["dtlz2", "dtlz4", "dtlz5", "dtlz6", "dtlz7"]
-subdirs = ["dtlz_mpi_logs-AC_qu", "dtlz_mpi_logs-C_qu", "dtlz_mpi_logs-L_qu",
-           "dtlz_mpi_logs-P_qu", "pymoo", #, "dtlz_mpi_logs-Q_qu"
-           "parmoo-tr"]
-labels = ["D-MoBO-AC", "D-MoBO-C", "D-MoBO-L",
-          "D-MoBO-PBI", "NSGAII", # "D-MoBO-Q",
-          "ParMOO-TR"]
-colors = ["g", "y", "b", "c", "r", "violet"] # "m",
-=======
 dirs = [
+    "dtlz1",
     "dtlz2",
+    "dtlz3",
     "dtlz4",
     "dtlz5",
     "dtlz6",
@@ -192,7 +184,6 @@ linestyle = [
     ":",
     "-",
 ]
->>>>>>> a7a7275130b7a521c4ca5a92d5a41d455193dc07
 
 # Gather performance stats
 plt.figure()
@@ -243,35 +234,15 @@ for di, DNAME in enumerate(subdirs):
         )
 
 # Add legends and show
-<<<<<<< HEAD
 # plt.legend(ncols=2, fontsize=7) # Comparing algorithms
-plt.legend(ncols=1, fontsize=6, loc="upper right") # Scaling  ## title=plabel, 
-plt.grid(True, which="major")
-plt.grid(True, which="minor", linestyle=":")
-plt.xlabel("Number of function evaluations")
-plt.ylabel("GD+ of nondominated solutions")
-
+plt.legend(ncols=2, fontsize=7, loc="upper right") # Scaling  ## title=plabel, 
 plt.xlim(0, 10000)
-plt.ylim(0, 4.0)
-
-ax = plt.gca()
-ticker_freq = 10000 / 5
-ax.xaxis.set_major_locator(ticker.MultipleLocator(ticker_freq))
-#ax.xaxis.set_major_formatter(minute_major_formatter)
-ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.5))
-ax.xaxis.set_minor_locator(ticker.MultipleLocator(ticker_freq / 2))
-
-plt.tight_layout()
-#plt.savefig(f"figures/hypervolume-vs-time-polaris-combo-{fname}.png")
-plt.savefig("dtlz_gd_small.png")
-plt.show()
-=======
+plt.ylim(0, 100.0)
 plt.xlabel("Evaluations")
 plt.ylabel("GD+")
-plt.legend(loc="lower right", ncols=2, fontsize=7)
+#plt.legend(loc="lower right", ncols=2, fontsize=7)
 plt.xlim(0, 10_000)
 plt.grid()
 plt.tight_layout()
 # plt.show()
-plt.savefig("figures/dtlz_rmse_small.png")
->>>>>>> a7a7275130b7a521c4ca5a92d5a41d455193dc07
+plt.savefig("figures/dtlz_gd_full.png")

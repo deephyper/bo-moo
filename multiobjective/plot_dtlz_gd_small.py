@@ -116,14 +116,11 @@ mpl.rcParams.update({
     'ytick.labelsize': fontsize
 })
 
-
 CONF_BOUND = True
 
 # Dirs, names, and colors
 dirs = [
-    "dtlz1",
     "dtlz2",
-    "dtlz3",
     "dtlz4",
     "dtlz5",
     "dtlz6",
@@ -224,8 +221,8 @@ for di, DNAME in enumerate(subdirs):
     )
     # If more than 1 result, plot std devs
     if n > 1 and CONF_BOUND:
-        hv_std = np.std(np.array(hv_vals), axis=0) / np.sqrt(n)
-        rmse_std = np.std(np.array(rmse_vals), axis=0) / np.sqrt(n)
+        hv_std = np.std(np.array(hv_vals), axis=0) / np.sqrt(10)
+        rmse_std = np.std(np.array(rmse_vals), axis=0) / np.sqrt(10)
         plt.fill_between(
             bbf_mean,
             rmse_mean - 1.96 * rmse_std,
@@ -235,24 +232,15 @@ for di, DNAME in enumerate(subdirs):
         )
 
 # Add legends and show
-plt.legend(ncols=2, fontsize=7, loc="upper right") 
-plt.grid(True, which="major")
-plt.grid(True, which="minor", linestyle=":")
+# plt.legend(ncols=2, fontsize=7) # Comparing algorithms
+plt.legend(ncols=2, fontsize=7, loc="upper right") # Scaling  ## title=plabel, 
+plt.xlim(0, 10000)
+plt.ylim(0, 4.0)
 plt.xlabel("Evaluations")
 plt.ylabel("GD+")
-
-plt.xlim(0, 10000)
-plt.ylim(0, 100.0)
-
-ax = plt.gca()
-ticker_freq = 10000 / 5
-ax.xaxis.set_major_locator(ticker.MultipleLocator(ticker_freq))
-#ax.xaxis.set_major_formatter(minute_major_formatter)
-ax.yaxis.set_minor_locator(ticker.MultipleLocator(20))
-ax.xaxis.set_minor_locator(ticker.MultipleLocator(ticker_freq / 2))
-
+#plt.legend(loc="lower right", ncols=2, fontsize=7)
+plt.xlim(0, 10_000)
+plt.grid()
 plt.tight_layout()
-#plt.savefig(f"figures/hypervolume-vs-time-polaris-combo-{fname}.png")
-plt.savefig("dtlz_gd_full.png")
-plt.show()
-
+# plt.show()
+plt.savefig("figures/dtlz_gd_small.png")
