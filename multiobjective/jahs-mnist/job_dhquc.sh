@@ -19,7 +19,7 @@ source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh
 # ~~~ you can use the following variables and pass them to your python script
 export problem="jahs"
 export search="dhquc"
-export SEED=4
+export SEED=0
 #!!! CONFIGURATION - END
 #
 
