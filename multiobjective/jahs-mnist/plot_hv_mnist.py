@@ -73,7 +73,7 @@ evaluator = PerformanceEvaluator()
 PROBLEM = "jahs"
 
 cmap = ["r", "g", "b", "c"]
-nmap = ["DeepHyper", "Random Search", "Optuna NSGA-II", "Optuna TPE"]
+nmap = ["Random", "D-MoBO", "NSGAII", "MoTPE"]
 
 for NNODES in [10, 20, 30, 40]:
     for si, SEARCH in enumerate(['dh', 'random', 'nsgaii', 'tpe']):

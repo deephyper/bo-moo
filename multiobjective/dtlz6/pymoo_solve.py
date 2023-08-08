@@ -56,7 +56,7 @@ for i, row in enumerate(res.history):
     for fi in row.result().F:
         obj_vals.append(fi)
     hv_vals.append(perf_eval.hypervolume(np.asarray(obj_vals)))
-    rmse_vals.append(perf_eval.rmse(np.asarray(obj_vals)))
+    rmse_vals.append(perf_eval.gdPlus(np.asarray(obj_vals)))
     npts_vals.append(perf_eval.numPts(np.asarray(obj_vals)))
     bbf_num.append((i+1)*80)
 
