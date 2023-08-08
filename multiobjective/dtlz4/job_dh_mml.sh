@@ -6,6 +6,7 @@
 # #PBF -q preemptable
 #PBS -A datascience
 #PBS -l filesystems=grand:home
+##PBS -l filesystems=home
 
 set -xe
 
@@ -23,8 +24,8 @@ export OMP_NUM_THREADS=$NDEPTH
 export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf"
 
 # Set the seed
-#for seed in 0 1 2 3 4 5 6 7 8 9
-for seed in 7 8 9
+for seed in 0 1 2 3 4 5 6 7 8 9
+#for seed in 8 9
 do
 	# Run DeepHyper AC
 	# Setup Redis Database
@@ -98,21 +99,21 @@ do
 	# Stop the redis server
 	redis-cli shutdown
 	
-	# Run DeepHyper Q
-	# Setup Redis Database
-	export log_dir="dtlz_mpi_logs-Q_mml"
-	mkdir -p $log_dir
-	pushd $log_dir
-	redis-server $REDIS_CONF &
-	export DEEPHYPER_DB_HOST=$HOST
-	popd
-	sleep 5
-	# Run the DeepHyper script
-	mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
-	    --depth=${NDEPTH} \
-	    --cpu-bind depth \
-	    --envall \
-	    python dtlz_mpi_solve_Q_mml.py $seed
-	# Stop the redis server
-	redis-cli shutdown
+	## Run DeepHyper Q
+	## Setup Redis Database
+	#export log_dir="dtlz_mpi_logs-Q_mml"
+	#mkdir -p $log_dir
+	#pushd $log_dir
+	#redis-server $REDIS_CONF &
+	#export DEEPHYPER_DB_HOST=$HOST
+	#popd
+	#sleep 5
+	## Run the DeepHyper script
+	#mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
+	#    --depth=${NDEPTH} \
+	#    --cpu-bind depth \
+	#    --envall \
+	#    python dtlz_mpi_solve_Q_mml.py $seed
+	## Stop the redis server
+	#redis-cli shutdown
 done

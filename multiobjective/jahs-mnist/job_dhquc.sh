@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l select=40:system=polaris # TODO
+#PBS -l select=40:system=polaris
 #PBS -l place=scatter
 #PBS -l walltime=03:00:00
 ##PBS -q debug 
@@ -12,14 +12,14 @@ set -xe
 cd ${PBS_O_WORKDIR}
 
 # source ../../../build/activate-dhenv.sh
-source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh # TODO
+source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh
 
 #!!! CONFIGURATION - START
 # ~~~ EDIT: used to create the name of the experiment folder
 # ~~~ you can use the following variables and pass them to your python script
 export problem="jahs"
-export search="dhqu"
-export SEED=4 # TODO
+export search="dhquc"
+export SEED=4
 #!!! CONFIGURATION - END
 #
 
@@ -31,7 +31,7 @@ export NTOTRANKS=$(( $NNODES * $NRANKS_PER_NODE )) # 25 n * 4 w/n = 100 w
 export OMP_NUM_THREADS=$NDEPTH
 
 # Mkdirs / activation files
-export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf" # TODO
+export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf"
 export DEEPHYPER_LOG_DIR="results/$problem-$search-$NNODES-$SEED"
 mkdir -p $DEEPHYPER_LOG_DIR
 
@@ -47,4 +47,4 @@ mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    python jahs_mpi_solve_dhqu.py $SEED
+    python jahs_mpi_solve_dhquc.py $SEED

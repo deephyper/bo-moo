@@ -59,7 +59,7 @@ evaluator = MPIDistributedBO.bootstrap_evaluator(
 # define the search method and scalarization
 search = MPIDistributedBO(hpo.problem,
                           evaluator,
-                          moo_scalarization_strategy="Chebyshev",
+                          moo_scalarization_strategy="Linear",
                           moo_scalarization_weight="random",
                           # update_prior=True,
                           # update_prior_quantile=0.25,

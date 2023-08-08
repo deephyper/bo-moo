@@ -91,7 +91,7 @@ if rank == 0:
     obj_vals = np.asarray([results["objective_0"].values, results["objective_1"].values, results["objective_2"].values]).T
 
     # Initialize performance arrays
-    rmse_vals = []
+    gdPlus_vals = []
     npts_vals = []
     hv_vals = []
     bbf_num = []
@@ -99,12 +99,12 @@ if rank == 0:
     perf_eval = PerformanceEvaluator()
     for i in range(100, BB_BUDGET, 100):
         hv_vals.append(perf_eval.hypervolume(obj_vals[:i, :]))
-        rmse_vals.append(perf_eval.rmse(obj_vals[:i, :]))
+        gdPlus_vals.append(perf_eval.gdPlus(obj_vals[:i, :]))
         npts_vals.append(perf_eval.numPts(obj_vals[:i, :]))
         bbf_num.append(i)
     # Don't forget final budget
     hv_vals.append(perf_eval.hypervolume(obj_vals))
-    rmse_vals.append(perf_eval.rmse(obj_vals))
+    gdPlus_vals.append(perf_eval.gdPlus(obj_vals))
     bbf_num.append(BB_BUDGET)
 
     # Dump results to csv file
@@ -113,4 +113,4 @@ if rank == 0:
         writer = csv.writer(fp)
         writer.writerow(bbf_num)
         writer.writerow(hv_vals)
-        writer.writerow(rmse_vals)
+        writer.writerow(gdPlus_vals)
