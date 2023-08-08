@@ -164,7 +164,7 @@ for di, DNAME in enumerate(dirs):
 
 # Add legends and show
 plt.xlabel("Evaluations")
-plt.ylabel("RMSE")
+plt.ylabel("GD+")
 plt.legend(loc="upper right", ncols=2, fontsize=7)
 plt.xlim(0, 10_000)
 plt.grid()

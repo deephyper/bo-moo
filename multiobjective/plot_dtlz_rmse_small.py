@@ -267,7 +267,7 @@ plt.savefig("dtlz_gd_small.png")
 plt.show()
 =======
 plt.xlabel("Evaluations")
-plt.ylabel("RMSE")
+plt.ylabel("GD+")
 plt.legend(loc="lower right", ncols=2, fontsize=7)
 plt.xlim(0, 10_000)
 plt.grid()
