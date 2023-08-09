@@ -75,6 +75,7 @@ search = MPIDistributedBO(hpo.problem,
                           random_state=SEED,
                           update_prior=True,
                           moo_scalarization_strategy="Quadratic",
+                          objective_scaler="minmaxlog",
                           log_dir="dtlz_mpi_logs-Q_mml",
                           comm=comm)
 # Solve with BB_BUDGET evals

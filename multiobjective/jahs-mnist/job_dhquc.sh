@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l select=40:system=polaris
+#PBS -l select=10:system=polaris
 #PBS -l place=scatter
 #PBS -l walltime=03:00:00
 ##PBS -q debug 
@@ -19,7 +19,7 @@ source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh
 # ~~~ you can use the following variables and pass them to your python script
 export problem="jahs"
 export search="dhquc"
-export SEED=0
+export SEED=4
 #!!! CONFIGURATION - END
 #
 
