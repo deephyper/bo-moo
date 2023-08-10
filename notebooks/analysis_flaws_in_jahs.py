@@ -78,52 +78,52 @@ range of values.
 
 from matplotlib import pyplot as plt
 
-soln_pts_2d = pareto_front(soln_pts[:, :2])
-plt.scatter(soln_pts_2d[:,0], soln_pts_2d[:,1])
-plt.xlabel("Error rate (100 - Accuracy)")
-plt.ylabel("Latency (secs)")
-plt.show()
-
-"""
-Show pairwise scatter plots for all objectives.
-"""
-
-fig, axs = plt.subplots(2,2)
-axs[0,0].scatter(soln_pts[:,0], soln_pts[:,1])
-axs[0,0].set_xlabel("Error rate (100 - Accuracy)")
-axs[0,0].set_ylabel("Latency (secs)")
-axs[1,1].scatter(soln_pts[:,1], soln_pts[:,2])
-axs[1,1].set_xlabel("Latency (secs)")
-axs[1,1].set_ylabel("Model size (MB)")
-axs[1,0].scatter(soln_pts[:,0], soln_pts[:,2])
-axs[1,0].set_xlabel("Error rate (100 - Accuracy)")
-axs[1,0].set_ylabel("Model size (MB)")
-plt.tight_layout()
-plt.show()
-
-""" 
-The above plot is too difficult to see the tradeoffs.
-Zoom in on just the regions of interest for each pair.
-"""
-
-fig, axs = plt.subplots(2,2)
-axs[0,0].scatter(soln_pts[:,0], soln_pts[:,1])
-axs[0,0].set_xbound((4, 10))
-axs[0,0].set_ybound((0, 2))
-axs[0,0].set_xlabel("Error rate (100 - Accuracy)")
-axs[0,0].set_ylabel("Latency (secs)")
-axs[1,1].scatter(soln_pts[:,1], soln_pts[:,2])
-axs[1,1].set_xbound((0, 2))
-axs[1,1].set_ybound((0, 1))
-axs[1,1].set_xlabel("Latency (secs)")
-axs[1,1].set_ylabel("Model size (MB)")
-axs[1,0].scatter(soln_pts[:,0], soln_pts[:,2])
-axs[1,0].set_xbound((4, 10))
-axs[1,0].set_ybound((0, 1))
-axs[1,0].set_xlabel("Error rate (100 - Accuracy)")
-axs[1,0].set_ylabel("Model size (MB)")
-plt.tight_layout()
-plt.show()
+#soln_pts_2d = pareto_front(soln_pts[:, :2])
+#plt.scatter(soln_pts_2d[:,0], soln_pts_2d[:,1])
+#plt.xlabel("Error rate (100 - Accuracy)")
+#plt.ylabel("Latency (secs)")
+#plt.show()
+#
+#"""
+#Show pairwise scatter plots for all objectives.
+#"""
+#
+#fig, axs = plt.subplots(2,2)
+#axs[0,0].scatter(soln_pts[:,0], soln_pts[:,1])
+#axs[0,0].set_xlabel("Error rate (100 - Accuracy)")
+#axs[0,0].set_ylabel("Latency (secs)")
+#axs[1,1].scatter(soln_pts[:,1], soln_pts[:,2])
+#axs[1,1].set_xlabel("Latency (secs)")
+#axs[1,1].set_ylabel("Model size (MB)")
+#axs[1,0].scatter(soln_pts[:,0], soln_pts[:,2])
+#axs[1,0].set_xlabel("Error rate (100 - Accuracy)")
+#axs[1,0].set_ylabel("Model size (MB)")
+#plt.tight_layout()
+#plt.show()
+#
+#""" 
+#The above plot is too difficult to see the tradeoffs.
+#Zoom in on just the regions of interest for each pair.
+#"""
+#
+#fig, axs = plt.subplots(2,2)
+#axs[0,0].scatter(soln_pts[:,0], soln_pts[:,1])
+#axs[0,0].set_xbound((4, 10))
+#axs[0,0].set_ybound((0, 2))
+#axs[0,0].set_xlabel("Error rate (100 - Accuracy)")
+#axs[0,0].set_ylabel("Latency (secs)")
+#axs[1,1].scatter(soln_pts[:,1], soln_pts[:,2])
+#axs[1,1].set_xbound((0, 2))
+#axs[1,1].set_ybound((0, 1))
+#axs[1,1].set_xlabel("Latency (secs)")
+#axs[1,1].set_ylabel("Model size (MB)")
+#axs[1,0].scatter(soln_pts[:,0], soln_pts[:,2])
+#axs[1,0].set_xbound((4, 10))
+#axs[1,0].set_ybound((0, 1))
+#axs[1,0].set_xlabel("Error rate (100 - Accuracy)")
+#axs[1,0].set_ylabel("Model size (MB)")
+#plt.tight_layout()
+#plt.show()
 
 """
 Define the Hausdorff metric for calculating the distance between two
@@ -176,6 +176,7 @@ Import the original JAHS Bench datasets for comparison and extract the
 true Pareto front
 """
 
+path_to_data = "/lus/eagle/projects/datascience/regele/polaris/multi-objective-hpo/metric_data/fashion_mnist/raw.pkl.gz"
 true_pf = np.random.sample((100, 3)) * 10 # TODO when download finishes
 true_pf = pareto_front(true_pf)
 
@@ -204,7 +205,8 @@ axs[1,0].set_ybound((0, 1))
 axs[1,0].set_xlabel("Error rate (100 - Accuracy)")
 axs[1,0].set_ylabel("Model size (MB)")
 plt.tight_layout()
-plt.show()
+#plt.show()
+plt.savefig("true_vs_approx.png")
 
 """
 Calculate the Hausdorff distance between the two solution sets to

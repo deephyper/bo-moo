@@ -42,7 +42,7 @@ wait = True
 
 ### JAHS bench settings ###
 DATASET = "fashion_mnist"
-MODEL_PATH = "../.."
+MODEL_PATH = "/grand/datascience/tchang/polaris/deephyper_benchmark/lib/JAHSBench/jahs_bench_data"
 N_ITERATIONS = 100
 # Define the benchmark
 benchmark = Benchmark(

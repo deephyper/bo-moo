@@ -31,7 +31,6 @@ export NTOTRANKS=$(( $NNODES * $NRANKS_PER_NODE ))
 export NWORKERS=$(( $NTOTRANKS + 1 )) # Number of libE workers
 
 # Set path and log dirs
-export PYTHONPATH=$PYTHONPATH:/home/tchang
 export log_dir="results/$problem-$search-$NNODES-$SEED"
 mkdir -p $log_dir
 
