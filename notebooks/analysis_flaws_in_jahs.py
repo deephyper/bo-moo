@@ -50,7 +50,7 @@ for mi in methods:
                 if "pareto_efficient" in dfi.columns: # Some runs were done before this column was added to deephyper
                     dfi = dfi.loc[dfi["pareto_efficient"]] # Get Pareto points
                 for idx, row in dfi.iterrows():
-                    if row['objective_0'] >= 88:
+                    if True: #row['objective_0'] >= 88:
                         soln_pts.append([
                             100-row['objective_0'],
                             -row['objective_1'],
@@ -195,8 +195,8 @@ difference.
 """
 
 fig, axs = plt.subplots(2,2)
-axs[0,0].scatter(true_pf[:,0], true_pf[:,1], color="r")
-axs[0,0].scatter(soln_pts[:,0], soln_pts[:,1])
+axs[0,0].scatter(true_pf[:,0], true_pf[:,1], color="r", label="nondominated pts, raw data")
+axs[0,0].scatter(soln_pts[:,0], soln_pts[:,1], label="nondominated pts, surrogate data")
 axs[0,0].set_xbound((4, 10))
 axs[0,0].set_ybound((0, 2))
 axs[0,0].set_xlabel("Error rate (100 - Accuracy)")
@@ -215,7 +215,6 @@ axs[1,0].set_xlabel("Error rate (100 - Accuracy)")
 axs[1,0].set_ylabel("Model size (MB)")
 plt.tight_layout()
 plt.show()
-#plt.savefig("true_vs_approx.png")
 
 """
 Calculate the Hausdorff distance between the two solution sets to
@@ -223,3 +222,90 @@ see how close they are.
 """
 
 print(hausdorff(soln_pts, true_pf))
+
+"""
+Save fig in Romain's styles
+"""
+
+import matplotlib.ticker as ticker
+import matplotlib as mpl
+
+### Romain's style ###
+
+def set_size(width, fraction=1):
+    """Set figure dimensions to avoid scaling in LaTeX.
+    
+    From: https://jwalton.info/Embed-Publication-Matplotlib-Latex/
+    
+    Parameters
+    ----------
+    width: float
+            Document textwidth or columnwidth in pts
+    fraction: float, optional
+            Fraction of the width which you wish the figure to occupy
+
+    Returns
+    -------
+    fig_dim: tuple
+            Dimensions of figure in inches
+    """
+    # Width of figure (in pts)
+    fig_width_pt = width * fraction
+
+    # Convert from pt to inches
+    inches_per_pt = 1 / 72.27
+
+    # Golden ratio to set aesthetic figure height
+    # https://disq.us/p/2940ij3
+    golden_ratio = (5**.5 - 1) / 2
+
+    # Figure width in inches
+    fig_width_in = fig_width_pt * inches_per_pt
+    # Figure height in inches
+    fig_height_in = fig_width_in * golden_ratio
+
+    fig_dim = (fig_width_in, fig_height_in)
+
+    return fig_dim
+
+width, height = set_size(252, fraction=1.0)
+
+fontsize = 7
+
+mpl.rcParams.update(
+    {
+        "font.size": fontsize,
+        "figure.figsize": (width, height),
+        "figure.facecolor": "white",
+        "savefig.dpi": 360,
+        "figure.subplot.bottom": 0.125,
+        "figure.edgecolor": "white",
+        "xtick.labelsize": fontsize,
+        "ytick.labelsize": fontsize,
+    }
+)
+
+#axs[0,0].legend(ncols=2, fontsize=7, loc="upper right", bbox_to_anchor=(20, 0.3)) # Scaling  ## title=plabel, 
+
+fig, axs = plt.subplots(2,2)
+axs[0,0].scatter(true_pf[:,0], true_pf[:,1], color="r", label="nondominated pts, raw data")
+axs[0,0].scatter(soln_pts[:,0], soln_pts[:,1], label="nondominated pts, surrogate data")
+axs[0,0].set_xbound((4, 10))
+axs[0,0].set_ybound((0, 2))
+axs[0,0].set_xlabel("Error rate (100 - Accuracy)")
+axs[0,0].set_ylabel("Latency (secs)")
+axs[1,1].scatter(true_pf[:,1], true_pf[:,2], color="r")
+axs[1,1].scatter(soln_pts[:,1], soln_pts[:,2])
+axs[1,1].set_xbound((0, 2))
+axs[1,1].set_ybound((0, 1))
+axs[1,1].set_xlabel("Latency (secs)")
+axs[1,1].set_ylabel("Model size (MB)")
+axs[1,0].scatter(true_pf[:,0], true_pf[:,2], color="r")
+axs[1,0].scatter(soln_pts[:,0], soln_pts[:,2])
+axs[1,0].set_xbound((4, 10))
+axs[1,0].set_ybound((0, 1))
+axs[1,0].set_xlabel("Error rate (100 - Accuracy)")
+axs[1,0].set_ylabel("Model size (MB)")
+fig.tight_layout()
+
+fig.savefig("true_vs_approx.png")
