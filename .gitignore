@@ -132,3 +132,4 @@ dmypy.json
 optunadb/
 *.log
 notebooks/output/
+.DS_Store
