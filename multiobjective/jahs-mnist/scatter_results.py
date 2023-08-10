@@ -6,19 +6,21 @@ import numpy as np
 import os
 import pandas
 
-FILENAME = "jahs_mpi_logs-AC-cifar/results_seed0.csv"
+FILENAME = "results/jahs-dhquc-40-0/results.csv"
 try:
     # Read results from file
     results = pandas.read_csv(FILENAME)
-    valid_loss = np.asarray([100 - np.asarray([literal_eval(fi)]).flatten()[0] for fi in
-                             results.sort_values("job_id")["objective_0"].values])
-    pred_latency = np.asarray([-np.asarray([literal_eval(fi)]).flatten()[-1] for fi in
-                               results.sort_values("job_id")["objective_1"].values])
+    #valid_loss = np.asarray([100 - np.asarray([literal_eval(fi)]).flatten()[0] for fi in
+    #                         results.sort_values("job_id")["objective_0"].values])
+    #pred_latency = np.asarray([-np.asarray([literal_eval(fi)]).flatten()[-1] for fi in
+    #                           results.sort_values("job_id")["objective_1"].values])
+    valid_loss = results.sort_values("job_id")["objective_0"].values
+    pred_latency = results.sort_values("job_id")["objective_1"].values
     # Get pareto points
-    obj_vals = np.zeros((1000, 2))
-    for i in range(1000):
-        obj_vals[i, :] = np.array([valid_loss[i], pred_latency[i]])
-    pf = pareto_front(obj_vals[:, :])
+    obj_vals = []
+    for i in range(len(valid_loss)):
+        obj_vals.append([valid_loss[i], pred_latency[i]])
+    pf = pareto_front(np.asarray(obj_vals))
     # Add to plot
     plt.scatter(valid_loss,
                 pred_latency, color="b",
