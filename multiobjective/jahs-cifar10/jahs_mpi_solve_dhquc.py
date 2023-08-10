@@ -37,7 +37,7 @@ if rank == 0:
     )
 
 # Set the problem name
-os.environ["DEEPHYPER_BENCHMARK_JAHS_PROB"] = "fashion_mnist"
+os.environ["DEEPHYPER_BENCHMARK_JAHS_PROB"] = "cifar10"
 
 import deephyper_benchmark as dhb
 dhb.load("JAHSBench")
@@ -45,7 +45,7 @@ from deephyper_benchmark.lib.jahsbench import hpo
 
 # define MPI evaluator
 evaluator = MPIDistributedBO.bootstrap_evaluator(
-    lambda job: hpo.run(job, sleep=True),
+    lambda job: hpo.run(job, sleep=True, sleep_scale=0.005),
     evaluator_type="serial",
     storage_type="redis",
     storage_kwargs={
@@ -64,7 +64,7 @@ search = MPIDistributedBO(hpo.problem,
                           moo_scalarization_weight="random",
                           # update_prior=True,
                           # update_prior_quantile=0.25,
-                          moo_lower_bounds=[92, None, None],
+                          moo_lower_bounds=[88, None, None],
                           objective_scaler="quantile-uniform",
                           #objective_scaler="minmaxlog",
                           verbose=1,

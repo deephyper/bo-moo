@@ -25,8 +25,6 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-LOG_DIR = os.environ["DEEPHYPER_LOG_DIR"]
-
 # Setup info-level logging
 if rank == 0:
     logging.basicConfig(
@@ -36,8 +34,9 @@ if rank == 0:
         force=True,
     )
 
-# Set the problem name
-os.environ["DEEPHYPER_BENCHMARK_JAHS_PROB"] = "fashion_mnist"
+LOG_DIR = os.environ["DEEPHYPER_LOG_DIR"]
+
+os.environ["DEEPHYPER_BENCHMARK_JAHS_PROB"] = "cifar10"
 
 import deephyper_benchmark as dhb
 dhb.load("JAHSBench")
@@ -45,7 +44,7 @@ from deephyper_benchmark.lib.jahsbench import hpo
 
 # define MPI evaluator
 evaluator = MPIDistributedBO.bootstrap_evaluator(
-    lambda job: hpo.run(job, sleep=True),
+    lambda job: hpo.run(job, sleep=True, sleep_scale=0.005),
     evaluator_type="serial",
     storage_type="redis",
     storage_kwargs={
@@ -59,15 +58,9 @@ evaluator = MPIDistributedBO.bootstrap_evaluator(
 # define the search method and scalarization
 search = MPIDistributedBO(hpo.problem,
                           evaluator,
-                          moo_scalarization_strategy="Linear",
-                          #moo_scalarization_strategy="Chebyshev",
-                          moo_scalarization_weight="random",
-                          # update_prior=True,
-                          # update_prior_quantile=0.25,
-                          moo_lower_bounds=[92, None, None],
-                          objective_scaler="quantile-uniform",
-                          #objective_scaler="minmaxlog",
-                          verbose=1,
+                          filter_duplicates=False,
+                          surrogate_model="DUMMY",
+                          moo_scalarization_strategy="rChebyshev",
                           log_dir=LOG_DIR,
                           random_state=SEED,
                           comm=comm)
