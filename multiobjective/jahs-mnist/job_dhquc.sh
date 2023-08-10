@@ -6,20 +6,23 @@
 #PBF -q prod
 #PBS -A datascience
 #PBS -l filesystems=grand:home
+#PBS -J 0-4
+#PBS -r y
 
 set -xe
 
 cd ${PBS_O_WORKDIR}
 
-# source ../../../build/activate-dhenv.sh
-source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh
+# TODO: Adapt Environment
+source /lus/grand/projects/datascience/regele/polaris/deephyper-scalable-bo/build/activate-dhenv.sh # Env/Romain
+# source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh # Env/Tyler
 
 #!!! CONFIGURATION - START
 # ~~~ EDIT: used to create the name of the experiment folder
 # ~~~ you can use the following variables and pass them to your python script
 export problem="jahs"
 export search="dhquc"
-export SEED=4
+export SEED=${PBS_ARRAY_INDEX}
 #!!! CONFIGURATION - END
 #
 
@@ -31,7 +34,8 @@ export NTOTRANKS=$(( $NNODES * $NRANKS_PER_NODE )) # 25 n * 4 w/n = 100 w
 export OMP_NUM_THREADS=$NDEPTH
 
 # Mkdirs / activation files
-export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf"
+# TODO: Adapt Redis Conf
+# export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf" # TODO
 export DEEPHYPER_LOG_DIR="results/$problem-$search-$NNODES-$SEED"
 mkdir -p $DEEPHYPER_LOG_DIR
 
