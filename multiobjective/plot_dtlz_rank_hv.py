@@ -242,11 +242,11 @@ for di, exp in enumerate(subdirs):
 # Add legends and show
 plt.xlabel("Evaluations")
 plt.ylabel("Ranking (Hypervolume)")
-plt.legend(loc="upper right", ncols=2, fontsize=5)
+# plt.legend(loc="upper right", ncols=2, fontsize=5)
 plt.xlim(0, 10_000)
 plt.grid()
 plt.tight_layout()
-plt.savefig("figures/dtlz_rank_from_hv.png")
+plt.savefig("figures/dtlz_rank_from_hv_small.png")
 # plt.show()
 
 plt.figure()
@@ -274,9 +274,10 @@ for di, exp in enumerate(subdirs):
 # Add legends and show
 plt.xlabel("Evaluations")
 plt.ylabel("Hypervolume")
-plt.legend(loc="lower right", ncols=2, fontsize=5)
+# plt.legend(loc="lower right", ncols=2, fontsize=7)
 plt.xlim(0, 10_000)
+plt.ylim(0)
 plt.grid()
 plt.tight_layout()
-plt.savefig("figures/dtlz_hv_bis.png")
+plt.savefig("figures/dtlz_hv_small.png")
 # plt.show()
