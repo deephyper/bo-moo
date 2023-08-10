@@ -70,7 +70,7 @@ dirs = [
     "dtlz_mpi_logs-L_qu",
     "dtlz_mpi_logs-P_qu",
     "dtlz_mpi_logs-Q_qu",
-    "pymoo",
+    "dtlz_mpi_logs-Optuna",
     "dtlz_mpi_logs-AC_mml",
     "dtlz_mpi_logs-C_mml",
     "dtlz_mpi_logs-L_mml",
@@ -165,8 +165,9 @@ for di, DNAME in enumerate(dirs):
 # Add legends and show
 plt.xlabel("Evaluations")
 plt.ylabel("Hypervolume")
-plt.legend(loc="lower right", ncols=2, fontsize=7)
+plt.legend(loc="best", ncols=2, fontsize=5)
 plt.xlim(0, 10_000)
+plt.ylim(0)
 plt.grid()
 plt.tight_layout()
 plt.savefig("figures/dtlz5_hv.png")

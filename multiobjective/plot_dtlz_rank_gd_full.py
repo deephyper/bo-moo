@@ -187,7 +187,7 @@ for _, group_df in df.groupby(["dtlz", "seed"]):
     for gv, gdf in group_df.groupby(["exp"]):
         group_labels.append("-".join(gv))
         group_bbf_num.append(gdf["bbf_num"].values)
-        group_hv.append(gdf["hv_vals"].values)
+        group_hv.append(gdf["rmse_vals"].values)
 
     group_bbf_num = np.array(group_bbf_num)
     group_hv = np.array(group_hv)
@@ -241,12 +241,12 @@ for di, exp in enumerate(subdirs):
 
 # Add legends and show
 plt.xlabel("Evaluations")
-plt.ylabel("Ranking (Hypervolume)")
+plt.ylabel("Ranking (GD+)")
 plt.legend(loc="upper right", ncols=2, fontsize=5)
 plt.xlim(0, 10_000)
 plt.grid()
 plt.tight_layout()
-plt.savefig("figures/dtlz_rank_from_hv.png")
+plt.savefig("figures/dtlz_rank_from_gd.png")
 # plt.show()
 
 plt.figure()
@@ -273,10 +273,10 @@ for di, exp in enumerate(subdirs):
 
 # Add legends and show
 plt.xlabel("Evaluations")
-plt.ylabel("Hypervolume")
-plt.legend(loc="lower right", ncols=2, fontsize=5)
+plt.ylabel("GD+")
+plt.legend(loc="upper right", ncols=2, fontsize=5)
 plt.xlim(0, 10_000)
 plt.grid()
 plt.tight_layout()
-plt.savefig("figures/dtlz_hv_bis.png")
+plt.savefig("figures/dtlz_gd_bis.png")
 # plt.show()

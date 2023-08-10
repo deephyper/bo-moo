@@ -73,7 +73,7 @@ dirs = [
     "dtlz_mpi_logs-L_qu",
     "dtlz_mpi_logs-P_qu",
     "dtlz_mpi_logs-Q_qu",
-    "pymoo",
+    "dtlz_mpi_logs-Optuna",
     "dtlz_mpi_logs-AC_mml",
     "dtlz_mpi_logs-C_mml",
     "dtlz_mpi_logs-L_mml",
@@ -223,8 +223,9 @@ for i, DNAME in enumerate(group_labels):
 # Add legends and show
 plt.xlabel("Evaluations")
 plt.ylabel("Ranking")
-plt.legend(loc="upper right", ncols=2, fontsize=7)
+plt.legend(loc="best", ncols=2, fontsize=5)
 plt.xlim(0, 10_000)
+plt.ylim(0)
 plt.grid()
 plt.tight_layout()
 plt.savefig("figures/dtlz2_rank_from_hv.png")
@@ -255,8 +256,9 @@ for i, DNAME in enumerate(group_labels):
 # Add legends and show
 plt.xlabel("Evaluations")
 plt.ylabel("Hypervolume")
-plt.legend(loc="lower right", ncols=2, fontsize=7)
+plt.legend(loc="best", ncols=2, fontsize=5)
 plt.xlim(0, 10_000)
+plt.ylim(0)
 plt.grid()
 plt.tight_layout()
 plt.savefig("figures/dtlz2_hv_bis.png")
