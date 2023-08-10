@@ -176,9 +176,18 @@ Import the original JAHS Bench datasets for comparison and extract the
 true Pareto front
 """
 
-path_to_data = "/lus/eagle/projects/datascience/regele/polaris/multi-objective-hpo/metric_data/fashion_mnist/raw.pkl.gz"
-true_pf = np.random.sample((100, 3)) * 10 # TODO when download finishes
-true_pf = pareto_front(true_pf)
+import csv
+
+# Preprocessed and extracted PF -- took HOURS to complete
+path_to_data = "fmnist_nondom_pts.csv"
+
+# Extract the true PF from JAHS Bench data
+true_pf = []
+with open(path_to_data, "r") as fp:
+    reader = csv.reader(fp)
+    for row in reader:
+        true_pf.append([float(row[0]), float(row[1]), float(row[2])])
+true_pf = np.asarray(true_pf)
 
 """
 Scatter the true PF against the surrogate PF and visually observe the
@@ -186,27 +195,27 @@ difference.
 """
 
 fig, axs = plt.subplots(2,2)
-axs[0,0].scatter(soln_pts[:,0], soln_pts[:,1])
 axs[0,0].scatter(true_pf[:,0], true_pf[:,1], color="r")
+axs[0,0].scatter(soln_pts[:,0], soln_pts[:,1])
 axs[0,0].set_xbound((4, 10))
 axs[0,0].set_ybound((0, 2))
 axs[0,0].set_xlabel("Error rate (100 - Accuracy)")
 axs[0,0].set_ylabel("Latency (secs)")
-axs[1,1].scatter(soln_pts[:,1], soln_pts[:,2])
 axs[1,1].scatter(true_pf[:,1], true_pf[:,2], color="r")
+axs[1,1].scatter(soln_pts[:,1], soln_pts[:,2])
 axs[1,1].set_xbound((0, 2))
 axs[1,1].set_ybound((0, 1))
 axs[1,1].set_xlabel("Latency (secs)")
 axs[1,1].set_ylabel("Model size (MB)")
-axs[1,0].scatter(soln_pts[:,0], soln_pts[:,2])
 axs[1,0].scatter(true_pf[:,0], true_pf[:,2], color="r")
+axs[1,0].scatter(soln_pts[:,0], soln_pts[:,2])
 axs[1,0].set_xbound((4, 10))
 axs[1,0].set_ybound((0, 1))
 axs[1,0].set_xlabel("Error rate (100 - Accuracy)")
 axs[1,0].set_ylabel("Model size (MB)")
 plt.tight_layout()
-#plt.show()
-plt.savefig("true_vs_approx.png")
+plt.show()
+#plt.savefig("true_vs_approx.png")
 
 """
 Calculate the Hausdorff distance between the two solution sets to
