@@ -133,3 +133,7 @@ optunadb/
 *.log
 notebooks/output/
 .DS_Store
+dump.rdb
+context.yaml
+*.sh.e*
+*.sh.o*
