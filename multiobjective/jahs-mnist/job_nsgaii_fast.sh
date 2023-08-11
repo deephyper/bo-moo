@@ -55,7 +55,7 @@ mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
     --depth=${NDEPTH} \
     --cpu-bind depth \
     --envall \
-    ./set_affinity_gpu_polaris.sh python3 jahs_mpi_solve_nsgaii.py $SEED
+    ./set_affinity_gpu_polaris.sh python3 jahs_mpi_solve_nsgaii_fast.py $SEED
 
 dropdb hpo
 pg_ctl -D $OPTUNA_DB_DIR -l "$log_dir/db.log" stop
