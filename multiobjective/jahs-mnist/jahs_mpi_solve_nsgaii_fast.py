@@ -34,6 +34,8 @@ else:
 
     SEED = int(datetime.now().timestamp())
 
+import deephyper_benchmark as dhb
+dhb.load("JAHSBench")
 from deephyper_benchmark.lib.JAHSBench import hpo
 
 # Create MPI ranks
