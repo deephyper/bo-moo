@@ -6,7 +6,7 @@
 #PBF -q prod
 #PBS -A datascience
 #PBS -l filesystems=grand:home
-#PBS -J 0-4
+#PBS -J 2-2
 #PBS -r y
 
 set -xe
