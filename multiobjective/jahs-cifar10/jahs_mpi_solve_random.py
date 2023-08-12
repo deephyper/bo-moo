@@ -60,7 +60,6 @@ search = MPIDistributedBO(hpo.problem,
                           evaluator,
                           filter_duplicates=False,
                           surrogate_model="DUMMY",
-                          moo_scalarization_strategy="rChebyshev",
                           log_dir=LOG_DIR,
                           random_state=SEED,
                           comm=comm)
