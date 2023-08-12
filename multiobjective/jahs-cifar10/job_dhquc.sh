@@ -6,8 +6,10 @@
 #PBF -q prod
 #PBS -A datascience
 #PBS -l filesystems=grand:home
-#PBS -J 2-2
-#PBS -r y
+##PBS -J 2-2
+##PBS -r y
+
+export PBS_ARRAY_INDEX=2
 
 set -xe
 
