@@ -137,3 +137,4 @@ dump.rdb
 context.yaml
 *.sh.e*
 *.sh.o*
+multiobjective/jahs-mnist/results-v1/
