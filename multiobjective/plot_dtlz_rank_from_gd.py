@@ -77,59 +77,57 @@ dirs = [
     "dtlz7",
 ]
 subdirs = [
-    "dtlz_mpi_logs-AC_qu",
-    "dtlz_mpi_logs-C_qu",
-    "dtlz_mpi_logs-L_qu",
-    "dtlz_mpi_logs-P_qu",
-    "dtlz_mpi_logs-Q_qu",
-    "dtlz_mpi_logs-Optuna",
-    "dtlz_mpi_logs-AC_mml",
+    "dtlz_mpi_logs-C_id",
     "dtlz_mpi_logs-C_mml",
+    "dtlz_mpi_logs-C_qu",
+    "dtlz_mpi_logs-L_id",
     "dtlz_mpi_logs-L_mml",
+    "dtlz_mpi_logs-L_qu",
+    "dtlz_mpi_logs-P_id",
     "dtlz_mpi_logs-P_mml",
-    "dtlz_mpi_logs-Q_mml",
+    "dtlz_mpi_logs-P_qu",
+    "dtlz_mpi_logs-Optuna",
     "parmoo-tr",
 ]
 labels = [
-    "AC-QU",
-    "C-QU",
-    "L-QU",
-    "PBI-QU",
-    "Q-QU",
-    "NSGAII",
-    "AC-MML",
-    "C-MML",
+    "CH-Id",
+    "CH-MML",
+    "CH-QU",
+    "L-Id",
     "L-MML",
+    "L-QU",
+    "PBI-Id",
     "PBI-MML",
-    "Q-MML",
+    "PBI-QU",
+    "NSGAII",
     "TR",
 ]
+
 colors = [
-    "maroon",
+    "orange",
+    "orange",
     "orange",
     "seagreen",
-    "royalblue",
-    "purple",
-    "red",
-    "maroon",
-    "orange",
+    "seagreen",
     "seagreen",
     "royalblue",
-    "purple",
+    "royalblue",
+    "royalblue",
+    "crimson",
     "pink",
 ]
+
 linestyle = [
-    "--",
-    "--",
-    "--",
-    "--",
+    "-",
+    ":",
     "--",
     "-",
     ":",
+    "--",
+    "-",
     ":",
-    ":",
-    ":",
-    ":",
+    "--",
+    "-",
     "-",
 ]
 
@@ -144,21 +142,21 @@ for DTLZ_DIR in dirs:
                     csv_reader = csv.reader(fp)
                     bbf_num = [float(x) for x in csv_reader.__next__()]
                     hv_vals = [float(x) for x in csv_reader.__next__()]
-                    rmse_vals = [float(x) for x in csv_reader.__next__()]
+                    gd_vals = [float(x) for x in csv_reader.__next__()]
 
                 # Interpolate to have 100 values for all experiments
                 if len(bbf_num) != 100:
                     from scipy.interpolate import interp1d
 
                     f_hv = interp1d(bbf_num, hv_vals)
-                    f_rmse = interp1d(bbf_num, rmse_vals)
+                    f_gd = interp1d(bbf_num, gd_vals)
                     bbf_num_new = np.linspace(100, 10_000, 100)
                     hv_vals = f_hv(bbf_num_new)
-                    rmse_vals = f_rmse(bbf_num_new)
+                    gd_vals = f_gd(bbf_num_new)
                     bbf_num = bbf_num_new.tolist()
 
                 rdf = pd.DataFrame(
-                    {"bbf_num": bbf_num, "hv_vals": hv_vals, "rmse_vals": rmse_vals}
+                    {"bbf_num": bbf_num, "hv_vals": hv_vals, "gd_vals": gd_vals}
                 )
                 rdf["seed"] = iseed
                 rdf["dtlz"] = DTLZ_DIR
@@ -169,7 +167,7 @@ for DTLZ_DIR in dirs:
                 # Replace with dummy values for missing experiments
                 bbf_num = np.linspace(100, 10_000, 100)
                 z = np.zeros(len(bbf_num))
-                rdf = pd.DataFrame({"bbf_num": bbf_num, "hv_vals": z, "rmse_vals": z})
+                rdf = pd.DataFrame({"bbf_num": bbf_num, "hv_vals": z, "gd_vals": z})
                 rdf["seed"] = iseed
                 rdf["dtlz"] = DTLZ_DIR
                 rdf["exp"] = DNAME
@@ -183,22 +181,22 @@ task_rankings = []
 for _, group_df in df.groupby(["dtlz", "seed"]):
     group_labels = []
     group_bbf_num = []
-    group_hv = []
+    group_gd = []
     for gv, gdf in group_df.groupby(["exp"]):
         group_labels.append("-".join(gv))
         group_bbf_num.append(gdf["bbf_num"].values)
-        group_hv.append(gdf["rmse_vals"].values)
+        group_gd.append(gdf["gd_vals"].values)
 
     group_bbf_num = np.array(group_bbf_num)
-    group_hv = np.array(group_hv)
+    group_gd = np.array(group_gd)
 
-    ranks = np.zeros_like(group_hv).astype(int)
-    for i in range(group_hv.shape[1]):
-        r = group_hv.shape[0] - rank(group_hv[:, i], decimals=5) + 1
+    ranks = np.zeros_like(group_gd).astype(int)
+    for i in range(group_gd.shape[1]):
+        r = rank(group_gd[:, i], decimals=5) + 1
         ranks[:, i] = r
 
     task_bbf_num.append(group_bbf_num)
-    task_scores.append(group_hv)
+    task_scores.append(group_gd)
     task_rankings.append(ranks)
 
 task_bbf_num = np.array(task_bbf_num).astype(float)
@@ -216,7 +214,7 @@ stde_rankings = conf * np.std(task_rankings, axis=0) / np.sqrt(n)
 average_scores = np.mean(task_scores, axis=0)
 stde_scores = conf * np.std(task_scores, axis=0) / np.sqrt(n)
 
-plt.figure()
+fig = plt.figure()
 for di, exp in enumerate(subdirs):
     i = group_labels.index(exp)
 
@@ -242,15 +240,15 @@ for di, exp in enumerate(subdirs):
 # Add legends and show
 plt.xlabel("Evaluations")
 plt.ylabel("Ranking (GD+)")
-# plt.legend(loc="upper right", ncols=2, fontsize=5)
 plt.xlim(0, 10_000)
 # plt.ylim(0)
 plt.grid()
 plt.tight_layout()
-plt.savefig("figures/dtlz_rank_from_gd_small.png")
+fig.legend(ncols=1, bbox_to_anchor=(1.13, 0.94), fontsize=6)
+plt.savefig("figures/dtlz_rank_from_gd.png", bbox_inches="tight")
 # plt.show()
 
-plt.figure()
+fig = plt.figure()
 for di, exp in enumerate(subdirs):
     i = group_labels.index(exp)
     if n > 0:
@@ -275,10 +273,10 @@ for di, exp in enumerate(subdirs):
 # Add legends and show
 plt.xlabel("Evaluations")
 plt.ylabel("GD+")
-plt.legend(loc="upper right", ncols=2, fontsize=7)
 plt.xlim(0, 10_000)
 plt.ylim(0)
 plt.grid()
 plt.tight_layout()
-plt.savefig("figures/dtlz_gd_small.png")
+fig.legend(ncols=1, bbox_to_anchor=(1.13, 0.94), fontsize=6)
+plt.savefig("figures/dtlz_gd.png", bbox_inches="tight")
 # plt.show()
