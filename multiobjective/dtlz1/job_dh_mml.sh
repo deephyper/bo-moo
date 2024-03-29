@@ -12,20 +12,18 @@ set -xe
 
 cd ${PBS_O_WORKDIR}
 
-# source ../../../build/activate-dhenv.sh
-source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh
+source /lus/grand/projects/datascience/regele/polaris/deephyper-scalable-bo/build/activate-dhenv.sh
 
 # Configuration to place 1 worker per GPU
-export NDEPTH=16
-export NRANKS_PER_NODE=4
+export NDEPTH=4
+export NRANKS_PER_NODE=16
 export NNODES=`wc -l < $PBS_NODEFILE`
 export NTOTRANKS=$(( $NNODES * $NRANKS_PER_NODE ))
 export OMP_NUM_THREADS=$NDEPTH
-export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf"
+export REDIS_CONF="/lus/grand/projects/datascience/regele/polaris/deephyper-scalable-bo/build/redis.conf"
 
 # Set the seed
 for seed in 0 1 2 3 4 5 6 7 8 9
-#for seed in 8 9
 do
 	# Run DeepHyper AC
 	# Setup Redis Database
