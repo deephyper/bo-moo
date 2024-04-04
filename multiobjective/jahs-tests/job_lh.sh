@@ -12,7 +12,7 @@ set -xe
 cd ${PBS_O_WORKDIR}
 
 # source ../../../build/activate-dhenv.sh
-source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh
+source /lus/grand/projects/datascience/regele/polaris/deephyper-scalable-bo/build/activate-dhenv.sh
 
 # Configuration to place 1 worker per GPU
 export NDEPTH=16 # this * NRANKS_PER_NODE (below) = 64

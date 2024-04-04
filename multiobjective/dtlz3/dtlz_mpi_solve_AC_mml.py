@@ -73,7 +73,7 @@ evaluator = MPIDistributedBO.bootstrap_evaluator(
 search = MPIDistributedBO(hpo.problem,
                           evaluator,
                           acq_func="qUCBd",
-                          acq_optimizer="mixedga",
+                          acq_optimizer="ga",
                           acq_optimizer_freq=1,
                           moo_scalarization_strategy="AugChebyshev",
                           objective_scaler="minmaxlog",
@@ -89,6 +89,7 @@ if rank == 0:
     import numpy as np
 
     # Extract objective values from dataframe
+    results = results.sort_values("job_id")
     obj_vals = np.asarray([results["objective_0"].values, results["objective_1"].values, results["objective_2"].values]).T
 
     # Initialize performance arrays

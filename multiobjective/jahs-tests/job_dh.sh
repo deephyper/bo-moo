@@ -12,7 +12,7 @@ set -xe
 cd ${PBS_O_WORKDIR}
 
 # source ../../../build/activate-dhenv.sh
-source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh
+source /lus/grand/projects/datascience/regele/polaris/deephyper-scalable-bo/build/activate-dhenv.sh
 
 #!!! CONFIGURATION - START
 # ~~~ EDIT: used to create the name of the experiment folder
@@ -31,7 +31,7 @@ export NTOTRANKS=$(( $NNODES * $NRANKS_PER_NODE )) # 25 n * 4 w/n = 100 w
 export OMP_NUM_THREADS=$NDEPTH
 
 # Mkdirs / activation files
-export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf"
+export REDIS_CONF="/lus/grand/projects/datascience/regele/polaris/deephyper-scalable-bo/build/redis.conf"
 export PYTHONPATH=$PYTHONPATH:/home/tchang
 export DEEPHYPER_LOG_DIR="results/$problem-$search-$NNODES-$SEED"
 mkdir -p $DEEPHYPER_LOG_DIR

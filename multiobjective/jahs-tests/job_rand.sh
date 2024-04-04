@@ -12,7 +12,7 @@ set -xe
 cd ${PBS_O_WORKDIR}
 
 # source ../../../build/activate-dhenv.sh
-source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh
+source /lus/grand/projects/datascience/regele/polaris/deephyper-scalable-bo/build/activate-dhenv.sh
 
 # Configuration to place 1 worker per GPU
 export NDEPTH=16
@@ -22,7 +22,7 @@ export NTOTRANKS=$(( $NNODES * $NRANKS_PER_NODE ))
 export OMP_NUM_THREADS=$NDEPTH
 
 export log_dir="jahs_mpi_logs-random"
-export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf"
+export REDIS_CONF="/lus/grand/projects/datascience/regele/polaris/deephyper-scalable-bo/build/redis.conf"
 export PYTHONPATH=$PYTHONPATH:/home/tchang
 
 mkdir -p $log_dir

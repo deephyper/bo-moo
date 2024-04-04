@@ -25,23 +25,23 @@ export REDIS_CONF="/lus/grand/projects/datascience/regele/polaris/deephyper-scal
 # Set the seed
 for seed in 0 1 2 3 4 5 6 7 8 9
 do
-	# Run DeepHyper AC
-	# Setup Redis Database
-	export log_dir="dtlz_mpi_logs-AC_id"
-	mkdir -p $log_dir
-	pushd $log_dir
-	redis-server $REDIS_CONF &
-	export DEEPHYPER_DB_HOST=$HOST
-	popd
-	sleep 5
-	# Run the DeepHyper script
-	mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
-	    --depth=${NDEPTH} \
-	    --cpu-bind depth \
-	    --envall \
-	    python dtlz_mpi_solve_AC_id.py $seed
-	# Stop the redis server
-	redis-cli shutdown
+	# # Run DeepHyper AC
+	# # Setup Redis Database
+	# export log_dir="dtlz_mpi_logs-AC_id"
+	# mkdir -p $log_dir
+	# pushd $log_dir
+	# redis-server $REDIS_CONF &
+	# export DEEPHYPER_DB_HOST=$HOST
+	# popd
+	# sleep 5
+	# # Run the DeepHyper script
+	# mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} \
+	#     --depth=${NDEPTH} \
+	#     --cpu-bind depth \
+	#     --envall \
+	#     python dtlz_mpi_solve_AC_id.py $seed
+	# # Stop the redis server
+	# redis-cli shutdown
 	
 	# Run DeepHyper C
 	# Setup Redis Database

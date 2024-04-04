@@ -80,6 +80,7 @@ if rank == 0:
     import numpy as np
 
     # Extract objective values from dataframe
+    results = results.sort_values("job_id")
     obj_vals = np.asarray(
         [
             results["objective_0"].values,
