@@ -163,7 +163,8 @@ for _, group_df in df.groupby(["seed"]):
     group_bbf_num = []
     group_gd = []
     for gv, gdf in group_df.groupby(["exp"]):
-        group_labels.append("-".join(gv))
+        # group_labels.append("-".join(gv))
+        group_labels.append(gv)
         group_bbf_num.append(gdf["bbf_num"].values)
         group_gd.append(gdf["gd_vals"].values)
 

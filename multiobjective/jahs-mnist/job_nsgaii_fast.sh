@@ -12,7 +12,7 @@ cd ${PBS_O_WORKDIR}
 
 # TODO: Adapt Environment
 source /lus/grand/projects/datascience/regele/polaris/deephyper-scalable-bo/build/activate-dhenv.sh # Env/Romain
-# source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh # Env/Tyler
+# source /lus/grand/projects/datascience/regele/polaris/deephyper-scalable-bo/build/activate-dhenv.sh # Env/Tyler
 
 #!!! CONFIGURATION - START
 # ~~~ EDIT: used to create the name of the experiment folder

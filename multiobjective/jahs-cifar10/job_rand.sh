@@ -15,7 +15,7 @@ cd ${PBS_O_WORKDIR}
 
 # TODO: Adapt Environment
 source /lus/grand/projects/datascience/regele/polaris/deephyper-scalable-bo/build/activate-dhenv.sh # Env/Romain
-# source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh # Env/Tyler
+# source /lus/grand/projects/datascience/regele/polaris/deephyper-scalable-bo/build/activate-dhenv.sh # Env/Tyler
 
 #!!! CONFIGURATION - START
 # ~~~ EDIT: used to create the name of the experiment folder
@@ -35,7 +35,7 @@ export OMP_NUM_THREADS=$NDEPTH
 
 # Mkdirs / activation files
 # TODO: Adapt Redis Conf
-# export REDIS_CONF="/home/tchang/dh-workspace/scalable-bo/build/redis.conf" # TODO
+# export REDIS_CONF="/lus/grand/projects/datascience/regele/polaris/deephyper-scalable-bo/build/redis.conf" # TODO
 export DEEPHYPER_LOG_DIR="results/$problem-$search-$NNODES-$SEED"
 mkdir -p $DEEPHYPER_LOG_DIR
 

@@ -11,7 +11,7 @@ set -xe
 cd ${PBS_O_WORKDIR}
 
 # ~~~ EDIT: load your DeepHyper environment here
-source /home/tchang/dh-workspace/scalable-bo/build/activate-dhenv.sh
+source /lus/grand/projects/datascience/regele/polaris/deephyper-scalable-bo/build/activate-dhenv.sh
 
 #!!! CONFIGURATION - START
 # ~~~ EDIT: used to create the name of the experiment folder

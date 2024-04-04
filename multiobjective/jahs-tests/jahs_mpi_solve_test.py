@@ -47,7 +47,9 @@ evaluator = MPIDistributedBO.bootstrap_evaluator(
 # define the search method and scalarization
 search = MPIDistributedBO(hpo.problem,
                           evaluator,
-                          update_prior=True,
+                          acq_func="UCBd",
+                          acq_optimizer="mixedga",
+                          acq_optimizer_freq=1,
                           moo_scalarization_strategy="rAugChebyshev",
                           log_dir="jahs_mpi_logs-test",
                           random_state=SEED,
