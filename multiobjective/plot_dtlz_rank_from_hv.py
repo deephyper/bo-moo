@@ -87,7 +87,7 @@ subdirs = [
     "dtlz_mpi_logs-P_mml",
     "dtlz_mpi_logs-P_qu",
     "dtlz_mpi_logs-Optuna",
-    "parmoo-tr",
+    # "parmoo-tr",
 ]
 labels = [
     "CH-Id",
@@ -100,7 +100,7 @@ labels = [
     "PBI-MML",
     "PBI-QU",
     "NSGAII",
-    "TR",
+    # "TR",
 ]
 
 colors = [
@@ -114,7 +114,7 @@ colors = [
     "royalblue",
     "royalblue",
     "crimson",
-    "pink",
+    # "pink",
 ]
 
 linestyle = [
@@ -128,7 +128,7 @@ linestyle = [
     ":",
     "--",
     "-",
-    "-",
+    # "-",
 ]
 
 # Gather performance stats

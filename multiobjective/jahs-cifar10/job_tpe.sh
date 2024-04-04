@@ -8,7 +8,8 @@
 ##PBS -J 3-3
 ##PBS -r y
 
-expor PBS_ARRAY_INDEX=3
+export PBS_ARRAY_INDEX=3
+
 set -xe
 
 cd ${PBS_O_WORKDIR}
